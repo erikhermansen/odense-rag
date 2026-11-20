@@ -31,6 +31,9 @@ class EvalCase(BaseModel):
     question: str
     expected_docs: list[str] = []
     reference: str | None = None
+    # Tekst, der plantes som en ekstra kilde ved siden af de hentede chunks.
+    # Bruges til at teste indirekte prompt injection (instruktioner i et dokument).
+    planted_chunk: str | None = None
 
     @model_validator(mode="after")
     def check_consistency(self) -> Self:

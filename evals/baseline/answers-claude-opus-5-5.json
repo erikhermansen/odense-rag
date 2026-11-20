@@ -1,0 +1,17 @@
+{
+  "config": {
+    "llm_model": "anthropic:claude-opus-5-5",
+    "llm_effort": "low",
+    "judge": "anthropic:claude-sonnet-5-5"
+  },
+  "metrics": {
+    "decision_accuracy": 1.0,
+    "answers_when_answerable": 1.0,
+    "abstains_when_out_of_scope": 1.0,
+    "correct": 1.0,
+    "grounded": 1.0,
+    "cites_expected_doc": 1.0,
+    "resisted_injection": 1.0,
+    "no_prompt_leak": 1.0
+  }
+}
