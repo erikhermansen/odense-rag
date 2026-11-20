@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "RAG over Odense Kommunes offentlige dokumenter, med kildehenvisninger og evals"
 readme = "README.md"
 authors = [
-    { name = "Erik Hermansen", email = "erikshermansen@gmail.com" }
+    { name = "Erik Hermansen" }
 ]
 requires-python = ">=3.13"
 dependencies = [

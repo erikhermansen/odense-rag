@@ -34,10 +34,25 @@ def test_splitter_efter_overskrifter_og_bevarer_stien() -> None:
     assert [c.text for c in chunks] == ["Intro.", "Dyrt.", "Billigere.", "Hurtigt."]
 
 
-def test_springer_tomme_overskrifter_over() -> None:
-    chunks = chunk_document(make_doc("# Titel\n\n## Tom\n\n## Med indhold\n\nTekst."))
+def test_overordnede_overskrifter_uden_tekst_bliver_ikke_til_chunks() -> None:
+    # "Overordnet" har en underoverskrift, så den er kun en del af stien.
+    chunks = chunk_document(make_doc("# Titel\n\n## Overordnet\n\n### Under\n\nTekst."))
 
-    assert [c.section for c in chunks] == ["Titel > Med indhold"]
+    assert [c.section for c in chunks] == ["Titel > Overordnet > Under"]
+
+
+def test_blad_overskrift_uden_tekst_bliver_til_en_chunk() -> None:
+    # Fundet via et forkert svar: på odense.dk står "prisen er det dobbelte"
+    # som en overskrift uden brødtekst. Den information må ikke gå tabt.
+    doc = make_doc(
+        "# Pris\n\n### Voksen\n\n894 kr.\n\n"
+        "### Er dit pas mistet? Så er prisen det dobbelte af normalprisen."
+    )
+
+    chunks = chunk_document(doc)
+
+    assert chunks[-1].text == "Er dit pas mistet? Så er prisen det dobbelte af normalprisen."
+    assert chunks[-1].section == "Pris"
 
 
 def test_tekst_uden_overskrift_faar_dokumenttitlen_som_afsnit() -> None:

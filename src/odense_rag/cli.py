@@ -4,9 +4,13 @@ Typer bygger CLI'en ud fra funktionssignaturer og type hints, lidt ligesom
 commander/yargs, men uden at man selv beskriver argumenterne.
 """
 
+import os
 from pathlib import Path
 
 import typer
+
+# Pydantic-AI viser et banner om observability (Logfire/OpenTelemetry) i terminalen.
+os.environ.setdefault("PYDANTIC_AI_NO_BANNER", "1")
 
 app = typer.Typer(no_args_is_help=True)
 
@@ -55,6 +59,23 @@ def search(query: str, k: int = 5) -> None:
 
     for hit in retrieve(get_settings(), query, k):
         typer.echo(f"{hit.score:.3f}  {hit.chunk.chunk_id:40}  {hit.chunk.section[:60]}")
+
+
+@app.command()
+def ask(question: str) -> None:
+    """Stil et spørgsmål og få et svar med kilder."""
+    from odense_rag.agent import answer_question
+    from odense_rag.config import get_settings
+
+    response = answer_question(get_settings(), question)
+    typer.echo(f"\n{response.answer}\n")
+    for i, source in enumerate(response.sources, start=1):
+        typer.echo(f"[{i}] {source.section}\n    {source.url}")
+        typer.echo(f'    "{source.quote}"')
+    typer.echo(
+        f"\n({response.kind}, {response.model}, {response.latency_ms} ms, "
+        f"{response.input_tokens} ind / {response.output_tokens} ud tokens)"
+    )
 
 
 if __name__ == "__main__":

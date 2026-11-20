@@ -76,25 +76,33 @@ def chunk_document(doc: Document, max_chars: int = MAX_CHARS) -> list[Chunk]:
     heading_stack: list[tuple[int, str]] = []  # (niveau, overskrift)
     buffer: list[str] = []
 
-    def flush() -> None:
+    def path_of(stack: list[tuple[int, str]]) -> str:
+        return " > ".join(h for _, h in stack) or doc.title
+
+    def flush(next_level: int | None) -> None:
+        """Afslutter den aktuelle sektion. next_level er niveauet på den næste overskrift."""
         # En indre funktion kan læse variabler fra den ydre (closure), som i TS.
         text = "\n".join(buffer).strip()
         if text:
-            path = " > ".join(h for _, h in heading_stack) or doc.title
-            sections.append((path, text))
+            sections.append((path_of(heading_stack), text))
+        elif heading_stack and (next_level is None or next_level <= heading_stack[-1][0]):
+            # En overskrift uden brødtekst og uden underoverskrifter er et "blad".
+            # På odense.dk bærer sådanne overskrifter ofte selve informationen
+            # (fx "Så er prisen det dobbelte af normalprisen"), så teksten bevares.
+            sections.append((path_of(heading_stack[:-1]), heading_stack[-1][1]))
         buffer.clear()
 
     for line in doc.body.splitlines():
         if match := HEADING_RE.match(line):  # `:=` tildeler og tester i ét (walrus)
-            flush()
             level, heading = len(match.group(1)), match.group(2).strip()
+            flush(level)
             # Fjern overskrifter på samme eller dybere niveau, før den nye skubbes på.
             while heading_stack and heading_stack[-1][0] >= level:
                 heading_stack.pop()
             heading_stack.append((level, heading))
         else:
             buffer.append(line)
-    flush()
+    flush(None)
 
     # Trin 2: split for lange sektioner og nummerér.
     chunks: list[Chunk] = []
