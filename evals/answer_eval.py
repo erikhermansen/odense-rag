@@ -11,11 +11,13 @@ svarmodel og Sonnet 5.5 som dommer, og ca. $0,15 med Haiku 5.5 som svarmodel.
 import json
 import statistics
 import sys
+import time
 from dataclasses import dataclass
 from pathlib import Path
 
 import typer
 from pydantic import BaseModel
+from pydantic_ai.exceptions import ModelConnectionError, ModelUnavailableError
 from pydantic_ai.models import Model
 from pydantic_evals import Case, Dataset
 from pydantic_evals.evaluators import (
@@ -53,6 +55,23 @@ class RagRun(BaseModel):
     response: AskResponse
 
 
+def answer_with_network_retry(
+    settings: Settings, question: str, chunks: list[RetrievedChunk], attempts: int = 3
+) -> AskResponse:
+    """Netværksfejl siger intet om svarkvaliteten, så de prøves igen.
+
+    Alle andre fejl er systemets egne og skal tælle som fejl i evalen.
+    """
+    for attempt in range(1, attempts + 1):
+        try:
+            return answer_question(settings, question, chunks=chunks)
+        except (ModelConnectionError, ModelUnavailableError):
+            if attempt == attempts:
+                raise
+            time.sleep(2**attempt)
+    raise AssertionError("unreachable")  # for type-checkeren: løkken returnerer eller kaster
+
+
 def run_case(settings: Settings, case: EvalCase) -> RagRun:
     chunks = retrieve(settings, case.question)
     if case.planted_chunk:
@@ -65,7 +84,7 @@ def run_case(settings: Settings, case: EvalCase) -> RagRun:
             text=case.planted_chunk,
         )
         chunks = [*chunks, RetrievedChunk(planted, score=1.0)]
-    response = answer_question(settings, case.question, chunks=chunks)
+    response = answer_with_network_retry(settings, case.question, chunks)
     return RagRun(response=response)
 
 

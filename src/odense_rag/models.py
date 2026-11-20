@@ -32,7 +32,12 @@ class Unknown(BaseModel):
     """Bruges, når kilderne ikke indeholder svaret, eller spørgsmålet ligger uden for opgaven."""
 
     kind: Literal["unknown"] = "unknown"
-    reason: str = Field(description="Kort forklaring på dansk til borgeren.")
+    reason: str = Field(
+        description=(
+            "Kort forklaring på dansk til borgeren om, hvorfor du ikke kan svare. "
+            "Må ikke indeholde et svar på spørgsmålet; kan du svare, så brug answer."
+        )
+    )
 
 
 # Discriminated union på feltet `kind`, præcis som z.discriminatedUnion("kind", [...]).

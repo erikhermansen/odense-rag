@@ -2,6 +2,7 @@
 
 import pytest
 from fastapi.testclient import TestClient
+from pydantic_ai.exceptions import ModelConnectionError
 
 from odense_rag import api
 from odense_rag.models import AskResponse, Source
@@ -48,3 +49,14 @@ def test_ask_afviser_ugyldige_spoergsmaal(client: TestClient, question: str) -> 
     response = client.post("/ask", json={"question": question})
 
     assert response.status_code == 422  # valideret af Pydantic, før vores kode kører
+
+
+def test_ask_giver_503_naar_sprogmodellen_er_utilgaengelig(monkeypatch: pytest.MonkeyPatch) -> None:
+    def fail(settings: object, question: str) -> AskResponse:
+        raise ModelConnectionError("test-model", "Connection error.")
+
+    monkeypatch.setattr(api, "answer_question", fail)
+
+    response = TestClient(api.app).post("/ask", json={"question": "Hvad koster et pas?"})
+
+    assert response.status_code == 503

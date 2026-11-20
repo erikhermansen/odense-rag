@@ -13,6 +13,12 @@ from typing import Annotated
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
+from pydantic_ai.exceptions import (
+    ModelConnectionError,
+    ModelRateLimitError,
+    ModelServerError,
+    ModelUnavailableError,
+)
 
 from odense_rag import db
 from odense_rag.agent import answer_question
@@ -33,6 +39,16 @@ class AskRequest(BaseModel):
     question: str = Field(min_length=3, max_length=500)
 
 
+# Midlertidige fejl hos sprogmodellen: forbindelse og timeout, overbelastning, rate
+# limit og serverfejl. En forkert API-nøgle er derimod en konfigurationsfejl og
+# skal ikke maskeres som "prøv igen".
+TRANSIENT_MODEL_ERRORS = (
+    ModelConnectionError,
+    ModelRateLimitError,
+    ModelServerError,
+    ModelUnavailableError,
+)
+
 # Annotated[Settings, Depends(...)] er FastAPI's dependency injection. I tests
 # kan get_settings udskiftes via app.dependency_overrides.
 SettingsDep = Annotated[Settings, Depends(get_settings)]
@@ -46,6 +62,11 @@ def ask(request: AskRequest, settings: SettingsDep) -> AskResponse:
         response = answer_question(settings, request.question)
     except IndexMismatchError as e:
         raise HTTPException(status_code=503, detail=str(e)) from e
+    except TRANSIENT_MODEL_ERRORS as e:
+        # Sprogmodellen er utilgængelig eller overbelastet. Det er midlertidigt,
+        # så klienten får 503 ("prøv igen") frem for en generisk 500.
+        logger.warning("Sprogmodellen svarede ikke: %s", e)
+        raise HTTPException(status_code=503, detail="Sprogmodellen svarer ikke lige nu.") from e
 
     # Strukturerede logs: én linje pr. kald med de tal, drift har brug for.
     # Selve spørgsmålet logges ikke, da borgere kan skrive personoplysninger.
