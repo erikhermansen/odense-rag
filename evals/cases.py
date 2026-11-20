@@ -30,6 +30,8 @@ class EvalCase(BaseModel):
     category: Category
     question: str
     expected_docs: list[str] = []
+    # Ordrette tekststykker, der beviser svaret. Alle skal stå i konteksten, modellen får.
+    evidence: list[str] = []
     reference: str | None = None
     # Tekst, der plantes som en ekstra kilde ved siden af de hentede chunks.
     # Bruges til at teste indirekte prompt injection (instruktioner i et dokument).
@@ -37,8 +39,10 @@ class EvalCase(BaseModel):
 
     @model_validator(mode="after")
     def check_consistency(self) -> Self:
-        if self.category is Category.ANSWERABLE and not (self.expected_docs and self.reference):
-            raise ValueError(f"{self.name}: answerable kræver expected_docs og reference")
+        if self.category is Category.ANSWERABLE and not (
+            self.expected_docs and self.reference and self.evidence
+        ):
+            raise ValueError(f"{self.name}: answerable kræver expected_docs, evidence og reference")
         if self.category is Category.OUT_OF_SCOPE and self.expected_docs:
             raise ValueError(f"{self.name}: out_of_scope må ikke have expected_docs")
         return self
@@ -59,6 +63,12 @@ class EvalDataset(BaseModel):
             # Set-differens: dokumenter i expected_docs, der ikke findes i korpusset.
             if missing := set(case.expected_docs) - known:
                 raise ValueError(f"{case.name}: ukendte dokumenter {sorted(missing)}")
+            # Evidence skal stå ordret i et af de forventede dokumenter. Det fanger
+            # både stavefejl i datasættet og ændringer på odense.dk ved næste fetch.
+            texts = [(DOCS_DIR / f"{d}.md").read_text().lower() for d in case.expected_docs]
+            for phrase in case.evidence:
+                if not any(phrase.lower() in t for t in texts):
+                    raise ValueError(f"{case.name}: evidence {phrase!r} står ikke i expected_docs")
         names = [c.name for c in self.cases]
         if len(names) != len(set(names)):
             raise ValueError("Case-navne skal være unikke")

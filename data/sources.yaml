@@ -4,6 +4,9 @@
 # Valg: hele den borgerrettede sektion (/borger/), men ikke:
 #   - konkrete afgørelser, dispensationer og høringer om enkeltsager. De er støj
 #     for generelle borgerspørgsmål.
+#   - referater fra råd og udvalg, trafik-nyhedsbreve og en teknisk
+#     kvalitetshåndbog for parkdrift. De er tidsbundne eller interne, og deres
+#     mange datoer matchede alle spørgsmål, der nævner en dato (se evals/EXPERIMENTS.md).
 #   - /presse/ (nyheder bliver hurtigt forældede) og /politik/ (dagsordner og
 #     referater, ofte som PDF). De er udeladt ved at holde sig til /borger/.
 sitemap: https://www.odense.dk/sitemap.aspx
@@ -17,3 +20,6 @@ exclude_patterns:
   - vvm
   - lokalplan
   - forudgaaende
+  - /referater
+  - nyt-om-trafik
+  - kvalitetshaandbog

@@ -29,7 +29,15 @@ class Settings(BaseSettings):
     # Ord, der står i mere end denne andel af alle chunks, udelades af fuldtekstsøgningen.
     keyword_max_df: float = 0.05
     # Højst så mange chunks fra samme dokument i top-k (0 = ingen grænse).
-    max_chunks_per_doc: int = 2
+    # Bruges kun uden small-to-big. Den målte effekt var negativ: den fjernede netop
+    # de afsnit, der bar svaret (se evals/EXPERIMENTS.md).
+    max_chunks_per_doc: int = 0
+    # "Small-to-big": søg på chunks, men giv modellen hele siderne for de
+    # context_docs bedste dokumenter (0 = kun de top-k chunks). Siderne på odense.dk
+    # er korte, så det koster få tokens og sikrer, at hele svaret er med.
+    context_docs: int = 3
+    # Loft over kontekstens længde i tegn, når hele sider bruges (første side tages altid med).
+    context_max_chars: int = 12_000
 
 
 # @lru_cache på en funktion uden argumenter er Pythons gængse "lazy singleton":

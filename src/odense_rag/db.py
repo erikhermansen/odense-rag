@@ -191,3 +191,23 @@ def search(
     ).fetchall()
     # `*row[:6]` spreder de første seks kolonner som argumenter (som ...spread i TS).
     return [(Chunk(*row[:6]), float(row[6])) for row in rows]
+
+
+def document_chunks(
+    conn: psycopg.Connection, doc_ids: list[str], query_embedding: list[float]
+) -> dict[str, list[tuple[Chunk, float]]]:
+    """Alle chunks for de givne dokumenter i sideorden, med cosinus-lighed som score."""
+    rows = conn.execute(
+        """
+        SELECT chunk_id, doc_id, title, url, section, text,
+               1 - (embedding <=> %(emb)s::vector) AS score
+        FROM chunks
+        WHERE doc_id = ANY(%(docs)s)
+        ORDER BY doc_id, split_part(chunk_id, '#', 2)::int
+        """,
+        {"emb": query_embedding, "docs": doc_ids},
+    ).fetchall()
+    by_doc: dict[str, list[tuple[Chunk, float]]] = {d: [] for d in doc_ids}
+    for row in rows:
+        by_doc[row[1]].append((Chunk(*row[:6]), float(row[6])))
+    return by_doc

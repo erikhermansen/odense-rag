@@ -171,13 +171,37 @@ def build_dataset(settings: Settings) -> Dataset[EvalCase, RagRun, EvalCase]:
     )
 
 
+def applies(name: str, case: EvalCase) -> bool:
+    """Ville metrikken være målt på denne case? Bruges til at tælle crashede cases med."""
+    match name:
+        case "correct":
+            return case.reference is not None
+        case "resisted_injection":
+            return case.category is Category.INJECTION
+        case "cites_expected_doc":
+            return case.should_answer
+        case _:
+            return True
+
+
 def rate(report: EvaluationReport[EvalCase, RagRun, EvalCase], name: str, *cats: Category) -> float:
-    """Andel bestået for en assertion, evt. begrænset til visse kategorier."""
+    """Andel bestået for en assertion, evt. begrænset til visse kategorier.
+
+    En case, der crashede, tæller som ikke bestået for alle metrikker, der gælder
+    for den. Ellers ville et crash forbedre tallene ved at forsvinde fra nævneren.
+    """
     values = [
         bool(case.assertions[name].value)
         for case in report.cases
         if name in case.assertions
         and (not cats or (case.metadata and case.metadata.category in cats))
+    ]
+    values += [
+        False
+        for failure in report.failures
+        if failure.metadata
+        and applies(name, failure.metadata)
+        and (not cats or failure.metadata.category in cats)
     ]
     return sum(values) / len(values) if values else float("nan")
 
@@ -261,10 +285,6 @@ def main(
     )
     report.print(include_input=False, include_output=False, include_reasons=True)
 
-    if report.failures:
-        for failure in report.failures:
-            print(f"FEJL i {failure.name}: {failure.error_message}", file=sys.stderr)
-
     quality, ops = summarize(report, settings.llm_model)
     write_details(report, settings.llm_model.split(":")[-1])
     baseline_name = f"answers-{settings.llm_model.split(':')[-1]}"
@@ -284,15 +304,24 @@ def main(
         if not all(v.value for v in c.assertions.values())
     ]
     ops_lines = "\n".join(f"| {k} | {v:,.1f} |" for k, v in ops.items())
+    n_cases = len(report.cases) + len(report.failures)
     body = (
         f"Model: `{settings.llm_model}` (effort: {settings.llm_effort}), dommer: `{JUDGE_MODEL}`, "
-        f"{len(report.cases)} cases, tolerance {tolerance:.2f}\n\n{table}\n\n"
+        f"{n_cases} cases, tolerance {tolerance:.2f}\n\n{table}\n\n"
         f"| Drift | Værdi |\n|---|---:|\n{ops_lines}"
     )
     if failed:
         body += "\n\nCases med fejl: " + ", ".join(failed)
+    if report.failures:
+        body += (
+            "\n\n**Cases, der crashede** (tæller som fejl i alle relevante metrikker):\n"
+            + "\n".join(f"- `{f.name}`: {f.error_message}" for f in report.failures)
+        )
     publish(f"Svar-eval ({settings.llm_model.split(':')[-1]})", body)
 
+    if report.failures:
+        print(f"FEJL: {len(report.failures)} case(s) crashede", file=sys.stderr)
+        raise typer.Exit(1)
     if regressions and not update_baseline:
         print(f"FEJL: forværring i {', '.join(regressions)}", file=sys.stderr)
         raise typer.Exit(1)

@@ -4,11 +4,13 @@ Flow: spørgsmål -> retrieval (fast trin, se retrieval.py) -> én agent-kørsel
 med de hentede chunks som kontekst -> valideret Answer eller Unknown.
 """
 
+import logging
 import time
 from dataclasses import dataclass
 from functools import lru_cache
 
 from pydantic_ai import Agent, ModelRetry, NativeOutput, RunContext
+from pydantic_ai.exceptions import UnexpectedModelBehavior
 from pydantic_ai.models import Model
 from pydantic_ai.models.anthropic import AnthropicModel
 from pydantic_ai.providers.anthropic import AnthropicProvider
@@ -17,6 +19,8 @@ from pydantic_ai.settings import ModelSettings
 from odense_rag.config import Settings
 from odense_rag.models import Answer, AskResponse, RetrievedSource, Source, Unknown
 from odense_rag.retrieval import RetrievedChunk, retrieve
+
+logger = logging.getLogger("odense_rag")
 
 INSTRUCTIONS = """\
 Du er en assistent, der besvarer borgeres spørgsmål om Odense Kommune.
@@ -131,6 +135,21 @@ def get_agent(settings: Settings) -> Agent[RagDeps, Answer | Unknown]:
     return _cached_agent(settings.llm_model, key.get_secret_value() if key else None)
 
 
+def _retrieved_sources(chunks: list[RetrievedChunk], cited_ids: set[str]) -> list[RetrievedSource]:
+    return [
+        RetrievedSource(
+            chunk_id=c.chunk.chunk_id,
+            title=c.chunk.title,
+            section=c.chunk.section,
+            url=c.chunk.url,
+            text=c.chunk.text,
+            score=round(c.score, 4),
+            cited=c.chunk.chunk_id in cited_ids,
+        )
+        for c in chunks
+    ]
+
+
 def answer_question(
     settings: Settings,
     question: str,
@@ -145,11 +164,27 @@ def answer_question(
     agent = agent or get_agent(settings)
     deps = RagDeps(chunks)
 
-    result = agent.run_sync(
-        build_prompt(question, chunks),
-        deps=deps,
-        model_settings=model_settings_for(settings.llm_model, settings.llm_effort),
-    )
+    try:
+        result = agent.run_sync(
+            build_prompt(question, chunks),
+            deps=deps,
+            model_settings=model_settings_for(settings.llm_model, settings.llm_effort),
+        )
+    except UnexpectedModelBehavior as e:
+        # Modellen leverede ikke et gyldigt svar inden for antallet af forsøg, fx
+        # fordi den blev ved med at citere kilder, der ikke fandtes. Borgeren skal
+        # have et ærligt "ved ikke", ikke en serverfejl.
+        logger.warning("Intet gyldigt svar efter gentagne forsøg: %s", e)
+        return AskResponse(
+            kind="unknown",
+            answer="Jeg kunne ikke finde et svar, som kilderne kan underbygge.",
+            sources=[],
+            retrieved=_retrieved_sources(chunks, cited_ids=set()),
+            model=settings.llm_model,
+            latency_ms=round((time.perf_counter() - started) * 1000),
+            input_tokens=0,
+            output_tokens=0,
+        )
     usage = result.usage
     output = result.output
 
@@ -172,25 +207,11 @@ def answer_question(
         case Unknown():
             kind, text, sources = "unknown", output.reason, []
 
-    cited_ids = {s.chunk_id for s in sources}
-    retrieved = [
-        RetrievedSource(
-            chunk_id=c.chunk.chunk_id,
-            title=c.chunk.title,
-            section=c.chunk.section,
-            url=c.chunk.url,
-            text=c.chunk.text,
-            score=round(c.score, 4),
-            cited=c.chunk.chunk_id in cited_ids,
-        )
-        for c in chunks
-    ]
-
     return AskResponse(
         kind=kind,
         answer=text,
         sources=sources,
-        retrieved=retrieved,
+        retrieved=_retrieved_sources(chunks, cited_ids={s.chunk_id for s in sources}),
         model=settings.llm_model,
         latency_ms=round((time.perf_counter() - started) * 1000),
         input_tokens=usage.input_tokens or 0,

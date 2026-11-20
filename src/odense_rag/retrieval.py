@@ -9,6 +9,8 @@ import hashlib
 from dataclasses import dataclass
 from pathlib import Path
 
+import psycopg
+
 from odense_rag import db
 from odense_rag.config import Settings
 from odense_rag.ingest.chunk import Chunk, chunk_directory
@@ -64,19 +66,47 @@ def retrieve(settings: Settings, query: str, k: int | None = None) -> list[Retri
                 f"{settings.embed_model!r}. Kør `odense-rag ingest`."
             )
         k = k or settings.top_k
+        query_embedding = embedder.embed_query(query)
         hits = db.search(
             conn,
-            embedder.embed_query(query),
+            query_embedding,
             query,
             # Hentes der flere kandidater end k, har dokumentgrænsen noget at vælge imellem.
             candidates=max(k * 10, 50),
             hybrid=settings.retrieval_mode == "hybrid",
             max_df=settings.keyword_max_df,
         )
+        if settings.context_docs > 0:
+            return expand_to_documents(conn, hits, query_embedding, settings)
     return [
         RetrievedChunk(chunk, score)
         for chunk, score in limit_per_doc(hits, k, settings.max_chunks_per_doc)
     ]
+
+
+def expand_to_documents(
+    conn: psycopg.Connection,
+    hits: list[tuple[Chunk, float]],
+    query_embedding: list[float],
+    settings: Settings,
+) -> list[RetrievedChunk]:
+    """Small-to-big: de bedste dokumenter (efter bedste chunk) tages med som hele sider.
+
+    Chunks er gode til at *finde* det rigtige sted, men et svar kræver ofte resten
+    af siden: prisen for en voksen står i ét afsnit, reglen om dobbelt pris i et andet.
+    """
+    top_docs = list(dict.fromkeys(chunk.doc_id for chunk, _ in hits))[: settings.context_docs]
+    pages = db.document_chunks(conn, top_docs, query_embedding)
+    selected: list[RetrievedChunk] = []
+    used = 0
+    for doc_id in top_docs:
+        page = pages[doc_id]
+        size = sum(len(chunk.text) for chunk, _ in page)
+        if selected and used + size > settings.context_max_chars:
+            break
+        selected.extend(RetrievedChunk(chunk, score) for chunk, score in page)
+        used += size
+    return selected
 
 
 def limit_per_doc(

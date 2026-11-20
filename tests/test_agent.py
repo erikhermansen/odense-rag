@@ -21,8 +21,8 @@ from pydantic_ai.messages import (
 )
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
+from odense_rag.agent import RagDeps, build_agent, build_prompt
 from odense_rag.agent import answer_question as run_pipeline
-from odense_rag.agent import build_agent, build_prompt
 from odense_rag.config import Settings
 from odense_rag.ingest.chunk import Chunk
 from odense_rag.retrieval import RetrievedChunk
@@ -145,12 +145,24 @@ def test_citat_matches_uden_hensyn_til_store_bogstaver_og_mellemrum() -> None:
     assert len(script.received) == 1
 
 
-def test_giver_op_efter_gentagne_ugyldige_svar() -> None:
+def test_giver_ved_ikke_efter_gentagne_ugyldige_svar() -> None:
+    # Efter `retries` mislykkede forsøg skal borgeren have "ved ikke", ikke en serverfejl.
     script = ScriptedModel(*[answer(chunk_id="findes-ikke#0")] * 5)
+
+    response = ask(script)
+
+    assert response.kind == "unknown"
+    assert response.sources == []
+    assert len(script.received) == 3  # første forsøg + 2 retries
+
+
+def test_agenten_selv_kaster_stadig_ved_ugyldige_svar() -> None:
+    # Selve agenten kaster; det er answer_question, der oversætter til "ved ikke".
+    agent = build_agent(ScriptedModel(*[answer(chunk_id="findes-ikke#0")] * 5).as_model())
 
     # pytest.raises svarer til expect(...).toThrow() og fejler, hvis intet kastes.
     with pytest.raises(UnexpectedModelBehavior):
-        ask(script)
+        agent.run_sync("x", deps=RagDeps([PAS_CHUNK]))
 
 
 def test_prompten_indrammer_kilder_og_spoergsmaal_som_data() -> None:
