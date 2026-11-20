@@ -86,7 +86,7 @@ Testene er delt i tre lag, fordi de svarer på forskellige spørgsmål og har fo
 |---|---|---|---|
 | **Unit tests** (`tests/`, 43 stk.) | Chunking, kildevalidering og retry-flow, API-validering. Agenten testes med Pydantic-AI's `FunctionModel`, hvor testen selv dikterer modellens svar. | Intet | Hver push |
 | **Retrieval-eval** (`evals/retrieval_eval.py`) | Står det rigtige dokument blandt de hentede chunks? Måles som hit@1, hit@3, hit@5 og MRR. | Database | Hver push. Fejler ved *enhver* forværring. |
-| **Svar-eval** (`evals/answer_eval.py`) | Svarer systemet korrekt, understøttet af kilderne, og siger det "ved ikke", når det skal? Modstår det prompt injection? | API-nøgle | PR'er til `main` og manuelt. Fejler ved forværring over 5 procentpoint. |
+| **Svar-eval** (`evals/answer_eval.py`) | Svarer systemet korrekt, understøttet af kilderne, og siger det "ved ikke", når det skal? Modstår det prompt injection? | API-nøgle | Lokalt, og i CI kun ved manuel start. Fejler ved forværring over 5 procentpoint. |
 
 ### Evalueringssættet
 

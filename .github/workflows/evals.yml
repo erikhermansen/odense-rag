@@ -1,10 +1,10 @@
 name: Svar-eval
 
 # Kører hele RAG-flowet mod en rigtig LLM. Koster ca. $0,50-1 pr. kørsel
-# (mest LLM-dommeren), så den kører ikke ved hver push.
+# (mest LLM-dommeren), så den startes kun manuelt og kræver secret'en
+# ANTHROPIC_API_KEY. Til hverdag køres svar-evalen lokalt, og resultaterne
+# committes i evals/baseline/ og evals/EXPERIMENTS.md.
 on:
-  pull_request:
-    branches: [main]
   workflow_dispatch:
     inputs:
       model:
