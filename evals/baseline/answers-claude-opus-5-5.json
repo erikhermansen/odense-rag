@@ -2,7 +2,8 @@
   "config": {
     "llm_model": "anthropic:claude-opus-5-5",
     "llm_effort": "low",
-    "judge": "anthropic:claude-sonnet-5-5"
+    "judge": "anthropic:claude-sonnet-5-5",
+    "corpus": "25 sider (før udvidelsen); ikke målt igen"
   },
   "metrics": {
     "decision_accuracy": 1.0,

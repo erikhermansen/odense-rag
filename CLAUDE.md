@@ -16,7 +16,7 @@ uv run pytest                                # unit tests; no DB or API key need
 uv run pytest tests/test_chunk.py::test_name # single test
 uv run ruff check . && uv run ruff format --check . && uv run pyright
 uv run python -m evals.retrieval_eval        # deterministic, fails on any regression vs baseline
-uv run python -m evals.retrieval_eval --mode vector --max-per-doc 0 --max-df 0.02   # try variants
+uv run python -m evals.retrieval_eval --context-docs 0 --max-per-doc 2   # try variants without editing .env
 uv run python -m evals.answer_eval --model anthropic:claude-haiku-5-5   # costs ~$0.50-1 per run
 ```
 
@@ -24,12 +24,12 @@ Add `--update-baseline` to either eval to accept new numbers. Only do that delib
 
 ## Architecture
 
-- **Pipeline:** `retrieval.retrieve()` (fixed step, hybrid top-k: pgvector + Danish full text fused with RRF in `db.search`, then `limit_per_doc`) → `agent.answer_question()` (one Pydantic-AI run). Retrieval is deliberately *not* an agent tool, so it can be evaluated in isolation.
+- **Pipeline:** `retrieval.retrieve()` (fixed step: hybrid search, pgvector + Danish full text fused with RRF in `db.search`, then "small-to-big" `expand_to_documents`, which passes whole pages for the top `CONTEXT_DOCS`=3 docs) → `agent.answer_question()` (one Pydantic-AI run). Retrieval is deliberately *not* an agent tool, so it can be evaluated in isolation.
 - **Output contract:** the LLM returns `Answer | Unknown` (`models.py`) via `NativeOutput`. The model supplies only `chunk_id` + verbatim `quote`. Title, section and URL are looked up from the retrieved chunks. The `@agent.output_validator` in `build_agent` raises `ModelRetry` for unknown chunk ids or non-verbatim quotes.
 - **Chunking** (`ingest/chunk.py`) splits on markdown headings. `Chunk.embedding_text` prepends title and heading path (measured to help hit@1). Leaf headings without body text become chunks, because odense.dk sometimes puts the actual information in a heading.
-- **Corpus** is a committed snapshot in `data/docs/` (1,774 pages selected from the sitemap by `data/sources.yaml`). `odense-rag fetch` re-downloads it (~20 min, skips existing files); never run that in CI. Doc ids are the URL's last path segment, with parent segments prefixed only on collision (`aeldre--demens`). Chunk ids are `<doc_id>#<n>`, and `evals/dataset.yaml` refers to doc ids. When the corpus changes, re-check every `out_of_scope` case against it.
+- **Corpus** is a committed snapshot in `data/docs/` (1,459 pages selected from the sitemap by `data/sources.yaml`). `odense-rag fetch` re-downloads it (~20 min, skips existing files); never run that in CI. Doc ids are the URL's last path segment, with parent segments prefixed only on collision (`aeldre--demens`). Chunk ids are `<doc_id>#<n>`, and `evals/dataset.yaml` refers to doc ids. When the corpus changes, re-check every `out_of_scope` case against it.
 - **Index metadata:** `index_meta` stores the embedding model and a fingerprint (schema version, chunks, model). `retrieve()` raises `IndexMismatchError` if `EMBED_MODEL` differs. Bump `db.SCHEMA_VERSION` whenever the table schema changes. `term_df` holds per-word chunk frequency; words above `KEYWORD_MAX_DF` are dropped from the full-text part, because `ts_rank` has no IDF.
-- **Evals** use pydantic-evals. `evals/cases.py` validates the YAML (it checks that expected docs exist). `answer_eval` passes the whole `EvalCase` as task input, so the LLM judge sees `reference`. Evaluators return `{}` when they don't apply to a case. Per-case details are written to `evals/reports/` (gitignored, and uploaded as a CI artifact).
+- **Evals** use pydantic-evals. The retrieval eval's key metric is `evidence@context`: each case's verbatim `evidence` phrases must appear in the context the model gets. Doc-level hit@n missed real failures. `evals/cases.py` validates the YAML (it checks that expected docs exist). `answer_eval` passes the whole `EvalCase` as task input, so the LLM judge sees `reference`. Evaluators return `{}` when they don't apply to a case. Per-case details are written to `evals/reports/` (gitignored, and uploaded as a CI artifact).
 - **Frontend** (`frontend/`, Vue 3 + TS + Vite, pnpm): TS types are generated from FastAPI's OpenAPI schema. After changing a Pydantic model in `models.py`, run `uv run odense-rag openapi && (cd frontend && pnpm gen:api)`, because CI diffs both files. `useAsk` holds request state; FastAPI serves `frontend/dist` when it exists.
 
 ## Gotchas

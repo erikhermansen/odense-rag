@@ -1,7 +1,7 @@
 # odense-rag
 
 Et lille RAG-system, der besvarer borgeres spørgsmål om Odense Kommune ud fra kommunens
-borgerrettede sider på odense.dk (1.774 sider: borgerservice, bolig, affald, ældre, skole m.m.).
+borgerrettede sider på odense.dk (1.459 sider: borgerservice, bolig, affald, ældre, skole m.m.).
 Hvert svar har kildehenvisninger, og systemet siger "ved ikke", når kilderne ikke dækker
 spørgsmålet.
 
@@ -23,43 +23,98 @@ Har du mistet dit pas, koster et nyt pas det dobbelte af normalprisen. [...]
     "Er dit pas mistet/bortkommet, stjålet eller ødelagt? Så er prisen det dobbelte af normalprisen for et nyt pas."
 ```
 
-## Kom i gang
+## Sådan bruger du løsningen
 
-Kræver [uv](https://docs.astral.sh/uv/) og Docker.
+Kræver [uv](https://docs.astral.sh/uv/), Docker og en API-nøgle fra
+[platform.claude.com](https://platform.claude.com). Til frontend-udvikling også Node 22+ og pnpm.
 
 ```bash
 cp .env.example .env              # indsæt ANTHROPIC_API_KEY
-docker compose up -d db           # Postgres med pgvector
-uv sync
-uv run odense-rag ingest          # chunk, embed og indlæs korpusset (~2,5 min.)
-uv run odense-rag ask "Hvor længe gælder et legitimationskort?"
 ```
 
-Eller start hele stakken, inklusive API'et på http://localhost:8000/docs:
+Nøglen ligger kun i `.env`, som git ignorerer. Uden nøgle virker alt undtagen selve svarene:
+søgning, tests og retrieval-evalen.
+
+### 1. Hele løsningen i Docker (nemmest)
 
 ```bash
 docker compose up --build
-curl -X POST localhost:8000/ask -H 'content-type: application/json' \
-     -d '{"question": "Må jeg brænde haveaffald af?"}'
 ```
+
+Åbn **http://localhost:8000** for at stille spørgsmål i browseren. API-dokumentationen ligger på
+http://localhost:8000/docs. Første opstart bygger søgeindekset (ca. 2 min.); senere opstarter
+springer det over, så længe intet er ændret.
+
+### 2. Udviklingstilstand: API og frontend hver for sig
+
+Brug den, når du ændrer kode. Begge dele genindlæses automatisk ved ændringer.
+
+```bash
+docker compose up -d db                          # Postgres med pgvector
+uv sync
+uv run odense-rag ingest --if-changed            # byg søgeindekset (~2 min. første gang)
+uv run uvicorn odense_rag.api:app --reload       # API på http://localhost:8000
+```
+
+I en anden terminal:
+
+```bash
+cd frontend
+pnpm install
+pnpm dev                                         # frontend på http://localhost:5173
+```
+
+Vite sender kald til `/ask` og `/health` videre til API'et, så der er ingen CORS-opsætning.
+
+### 3. Kommandolinjen
+
+```bash
+uv run odense-rag ask "Hvor længe gælder et legitimationskort?"    # svar med kilder
+uv run odense-rag search "Hvad koster et pas?"                     # kun søgningen, uden LLM
+```
+
+`search` viser de tekststykker, modellen ville få, og hvor godt de matcher spørgsmålet.
+Det er nyttigt for at forstå, hvorfor et svar blev, som det blev.
+
+### Tests og evals
 
 | Kommando | Formål |
 |---|---|
 | `uv run pytest` | Unit tests (ingen API-nøgle eller database nødvendig) |
-| `uv run ruff check . && uv run pyright` | Lint og typecheck |
-| `uv run python -m evals.retrieval_eval` | Retrieval-eval, gratis og deterministisk (~3 sek.) |
-| `uv run python -m evals.answer_eval --model anthropic:claude-haiku-5-5` | Svar-eval med rigtig LLM (~$0,50-1) |
-| `uv run odense-rag search "..."` | Vis de hentede chunks uden LLM |
+| `uv run ruff check . && uv run pyright` | Lint og typecheck (Python) |
+| `cd frontend && pnpm typecheck && pnpm test` | Typecheck og tests (frontend) |
+| `uv run python -m evals.retrieval_eval` | Retrieval-eval, gratis og deterministisk (~2 sek.) |
+| `uv run python -m evals.answer_eval --model anthropic:claude-haiku-5-5` | Svar-eval med rigtig LLM (~$1 pr. kørsel) |
 | `uv run odense-rag fetch` | Hent korpusset fra odense.dk igen (~20 min.) |
-| `uv run uvicorn odense_rag.api:app --reload` + `cd frontend && pnpm dev` | API og Vue-frontend i udviklingstilstand |
+
+### Frontend
+
+`frontend/` er en Vue 3-app i TypeScript, bygget med Vite. Den består af:
+
+- `src/api/schema.d.ts`: TypeScript-typer genereret fra API'ets OpenAPI-skema, som igen
+  genereres fra Pydantic-modellerne. Ændres et felt i Python, fejler `pnpm typecheck`, indtil
+  frontenden er opdateret, og CI tjekker, at begge filer er genereret på ny.
+- `src/api/client.ts`: en typet klient (`openapi-fetch`).
+- `src/composables/useAsk.ts`: tilstanden for et spørgsmål som en discriminated union
+  (`idle`, `loading`, `done`, `error`). Et nyt spørgsmål annullerer et igangværende, så et
+  sent svar ikke kan overskrive et nyere.
+- `src/App.vue`: brugerfladen, med svar, kilder og en udfoldelig sektion, der viser de
+  hentede tekststykker og deres score ("Sådan fandt jeg svaret").
+
+Efter en ændring i `src/odense_rag/models.py`:
+
+```bash
+uv run odense-rag openapi && (cd frontend && pnpm gen:api)
+```
 
 ## Arkitektur
 
 ```mermaid
 flowchart LR
     Q[Spørgsmål] --> E[Embed spørgsmål<br/>lokalt, fastembed]
-    E --> R[(pgvector<br/>top-5 chunks)]
-    R --> P[Prompt: kilder + spørgsmål<br/>indrammet som data]
+    E --> R[(Postgres: pgvector +<br/>dansk fuldtekst, RRF)]
+    R --> D[Hele siden for de<br/>3 bedste dokumenter]
+    D --> P[Prompt: kilder + spørgsmål<br/>indrammet som data]
     P --> L[Pydantic-AI-agent<br/>Claude, struktureret output]
     L --> V{Output-validator}
     V -- "ukendt chunk_id eller<br/>citat ikke ordret" --> L
@@ -68,9 +123,9 @@ flowchart LR
 ```
 
 **Ingest** (`src/odense_rag/ingest/`): Alle sider under `/borger/` i odense.dk's sitemap
-hentes med `trafilatura` og gemmes som markdown i `data/docs/`. Afgørelser og høringer om
-enkeltsager udelades (se `data/sources.yaml`). Snapshot'et er committet, så evals er reproducerbare,
-selvom hjemmesiden ændrer sig. Siderne opdeles i 7.432 chunks efter overskrifter, embeddes
+hentes med `trafilatura` og gemmes som markdown i `data/docs/`. Afgørelser om enkeltsager,
+referater og nyhedsbreve udelades (se `data/sources.yaml`). Snapshot'et er committet, så evals er reproducerbare,
+selvom hjemmesiden ændrer sig. Siderne opdeles i 5.832 chunks efter overskrifter, embeddes
 lokalt og indlæses i Postgres.
 
 **Svar** (`agent.py`): Modellen returnerer en discriminated union, `Answer | Unknown`
@@ -87,7 +142,7 @@ Testene er delt i tre lag, fordi de svarer på forskellige spørgsmål og har fo
 | Lag | Hvad det tester | Kræver | Kører |
 |---|---|---|---|
 | **Unit tests** (`tests/`) | Chunking, kildevalidering og retry-flow, API-validering. Agenten testes med Pydantic-AI's `FunctionModel`, hvor testen selv dikterer modellens svar. | Intet | Hver push |
-| **Retrieval-eval** (`evals/retrieval_eval.py`) | Står det rigtige dokument blandt de hentede chunks? Måles som hit@1, hit@3, hit@5 og MRR. | Database | Hver push. Fejler ved *enhver* forværring. |
+| **Retrieval-eval** (`evals/retrieval_eval.py`) | Står det rigtige dokument øverst (hit@n, MRR)? Og står de ordrette sætninger, der beviser svaret, i den kontekst, modellen får (evidence@context)? | Database | Hver push. Fejler ved *enhver* forværring. |
 | **Svar-eval** (`evals/answer_eval.py`) | Svarer systemet korrekt, understøttet af kilderne, og siger det "ved ikke", når det skal? Modstår det prompt injection? | API-nøgle | Lokalt, og i CI kun ved manuel start. Fejler ved forværring over 5 procentpoint. |
 
 ### Evalueringssættet
@@ -123,45 +178,75 @@ for dommeren kan også tage fejl.
 
 Alle tal er fra kørsler den 20.11.2026. Se `evals/EXPERIMENTS.md` for detaljer.
 
-**Retrieval** (24 cases med forventet dokument, 1.774 sider):
+**Retrieval** (24 cases med forventet dokument):
 
-| | hit@1 | hit@3 | hit@5 | MRR |
+| | evidence@context | hit@1 | hit@3 | MRR |
 |---|---:|---:|---:|---:|
-| 25 sider, vektorsøgning | 0,909 | 1,000 | 1,000 | 0,955 |
-| 1.774 sider, vektorsøgning | 0,792 | 0,833 | 0,917 | 0,833 |
-| **1.774 sider, hybrid søgning (valgt)** | **0,833** | **0,958** | **1,000** | **0,899** |
+| 25 sider, top-5 chunks (første version) | - | 0,909 | 1,000 | 0,955 |
+| 1.459 sider, top-5 chunks, vektorsøgning | 0,792 | 0,792 | 0,833 | 0,833 |
+| **1.459 sider, hybrid søgning + hele sider for 3 dokumenter** | **1,000** | **0,875** | **1,000** | **0,931** |
 
-Udvidelsen af korpusset gjorde retrieval markant sværere, og evalen fangede det med det
-samme. Hybrid søgning genvandt det meste (se Afvejninger).
+**Svar**, med Claude Haiku 5.5 (`effort=low`) og Sonnet 5.5 som dommer, 32 cases:
 
-**Svar.** Tabellen nedenfor er målt på det oprindelige korpus med 25 sider.
+| | Lille korpus (25 sider) | Stort korpus, første forsøg | **Stort korpus, nu** |
+|---|---:|---:|---:|
+| Korrekte svar (besvarbare) | 95 % | 71 % | **100 %** |
+| Understøttet af kilder | 100 % | 97 % | **100 %** |
+| Siger "ved ikke" uden for kilderne | 100 % | 100 % | **100 %** |
+| Rigtig beslutning (svar / ved ikke) | 97 % | 84 % | **94 %** |
+| Modstod injection (5 forsøg) | 100 % | 100 % | **100 %** |
+| Latenstid, median | 2,0 s | 2,0 s | **2,0 s** |
+| Pris pr. 1.000 spørgsmål | $0,40 | $0,50 | **$0,70** |
 
-**Svar**, med `effort=low` og Sonnet 5.5 som dommer:
+De to resterende fejl er overforsigtighed: svaret er korrekt, men markeret som "ved ikke".
+
+### Fra 71 % til 100 %: hvad evals fandt
+
+Udvidelsen fra 25 til 1.459 sider fik korrektheden til at falde fra 95 % til 71 %, selvom
+retrieval-evalen viste, at det rigtige dokument blev fundet i 100 % af tilfældene. I 6 af 10
+fejlede svar manglede netop det *afsnit*, der bar svaret: Systemet svarede "Ja" til en vielse
+den 28. november, fordi afsnittet om lukkedage ikke var med. Det brugte børneprisen som
+normalpris for et pas, fordi voksenprisen var skåret fra. Retrieval-evalen målte på
+dokumentniveau og var blind for det.
+
+Rettelserne, i rækkefølge:
+1. **En bedre metrik først.** Hver case fik ordrette "evidence"-sætninger, og retrieval-evalen
+   måler nu, om de er i konteksten. Den metrik er gratis og forudsiger svarkvaliteten.
+2. **Small-to-big retrieval:** søg præcist på små chunks, men giv modellen hele siderne for de
+   3 bedste dokumenter. evidence@context steg fra 0,79 til 1,00, mens konteksten kun voksede
+   fra ca. 2.500 til 3.600 tegn.
+3. **Et renere korpus.** Referater og trafik-nyhedsbreve blev fjernet. Deres mange datoer matchede
+   alle spørgsmål, der nævner en dato.
+4. **En prompt-regel mod overforsigtighed**, og en "ved ikke" i stedet for et crash, når modellen
+   ikke kan levere gyldige kilder.
+
+### Modelvalg
+
+Målt på det lille korpus (Opus er ikke målt igen på det store af budgethensyn):
 
 | | Claude Haiku 5.5 | Claude Opus 5.5 |
 |---|---:|---:|
-| Rigtig beslutning (svar / ved ikke) | 97 % | 100 % |
-| Korrekte svar (besvarbare) | 90-95 % | 100 % |
-| Understøttet af kilder | 97-100 % | 100 % |
-| Modstod injection (5 forsøg) | 100 % | 100 % |
+| Korrekte svar | 90-95 % | 100 % |
 | Latenstid, median | 2,0 s | 3,5 s |
 | Pris pr. 1.000 spørgsmål | $0,40 | $18,30 |
 
+
+
 Sådan læser jeg tallene:
 
-- **Haiku er ca. 46 gange billigere og næsten lige så god.** Dens gennemgående fejl er
-  overforsigtighed: Den svarer "ved ikke" til "Kan min mor hente mit pas? Jeg er 20 år",
-  selvom reglen "over 18 skal selv hente" giver svaret. Til en borgerrettet løsning med
-  mange spørgsmål ville jeg starte med Haiku og bruge en stærkere model, hvor evals viser,
-  at det er nødvendigt.
-- **Variationen mellem kørsler er reel.** To kørsler med Haiku gav henholdsvis 4 og 1
-  fejlende cases. Med 20 besvarbare cases flytter én case tallet 5 procentpoint. Derfor har
+- **Haiku er ca. 46 gange billigere og næsten lige så god** på det lille korpus. Til en
+  borgerrettet løsning med mange spørgsmål ville jeg starte med Haiku og bruge en stærkere
+  model, hvor evals viser, at det er nødvendigt. Haikus gennemgående svaghed er
+  overforsigtighed: korrekte svar markeret som "ved ikke".
+- **Variationen mellem kørsler er reel.** To kørsler med Haiku på samme system gav 4 og 1
+  fejlende cases. Med 21 besvarbare cases flytter én case tallet ca. 5 procentpoint. Derfor har
   svar-evalen en tolerance på 0,05 i CI, mens retrieval-evalen (deterministisk) har 0.
   Kategorier med få cases (injection, uden for kilderne) fejler ved én enkelt fejl, og det er
   tilsigtet.
-- **Opus rammer 100 %, så sættet er for let i toppen.** Det kan ikke skelne mellem
-  Opus og en hypotetisk bedre løsning. Næste skridt er sværere cases: spørgsmål, der kræver
-  flere dokumenter, betingede regler og tvetydige formuleringer.
+- **Sættet kan skelne, men mangler sværhed i toppen.** Faldet til 71 % viste, at det fanger
+  reelle forværringer. Men et system, der rammer 100 %, kan ikke skelnes fra et bedre. Næste
+  skridt er sværere cases: spørgsmål, der kræver flere dokumenter, betingede regler og
+  tvetydige formuleringer.
 
 ### En fejl, evals fandt
 
@@ -193,8 +278,15 @@ boligstøtte?". En større embedding-model er et oplagt næste eksperiment.
 `ts_rank` har ingen IDF, så "odense" (står i 31 % af alle chunks) vægtede lige så meget som
 "boligstøtte" (0,5 %). Ord, der står i mere end 5 % af alle chunks, udelades derfor af
 fuldtekstdelen. En tærskel på 2 % scorede lidt højere på eval-sættet, men udelader kerneord
-som "pas", så den blev fravalgt som overfitting til 24 cases. Højst 2 chunks pr. dokument
-forhindrer, at én lang side fylder hele konteksten.
+som "pas", så den blev fravalgt som overfitting til 24 cases. Det var oprindeligt kombineret med en grænse på højst 2 chunks pr. dokument, men den fjernede
+netop de afsnit, der bar svaret, og er taget ud igen (se nedenfor).
+
+**Small-to-big: søg på chunks, svar ud fra hele sider.** Små chunks er gode til at *finde* det
+rigtige sted, men et svar kræver ofte resten af siden: Voksenprisen for et pas står i ét afsnit,
+reglen om dobbelt pris ved mistet pas i et andet. Modellen får derfor hele siderne for de 3
+bedste dokumenter. Siderne på odense.dk er korte, så det koster ca. 1.100 tegn mere end 5
+spredte chunks, og evidence@context steg fra 0,79 til 1,00. Ulempen er, at metoden afhænger
+af korte sider. Ved lange PDF'er skal der et vindue omkring de fundne chunks til i stedet.
 
 **Fast pipeline frem for retrieval som tool.** Søgning sker altid før LLM-kaldet, i stedet
 for at agenten selv kalder et søge-tool. Det koster fleksibilitet (agenten kan ikke
@@ -210,7 +302,7 @@ skiftes med én miljøvariabel (`LLM_MODEL`), fordi Pydantic-AI abstraherer udby
 structured outputs, så svaret altid følger skemaet. "Ved ikke" er en variant i typen,
 ikke en tekststreng, man skal håbe på. Det gør adfærden testbar.
 
-**Intet ANN-indeks.** Ved 7.432 chunks er en eksakt søgning i pgvector stadig hurtig
+**Intet ANN-indeks.** Ved 5.832 chunks er en eksakt søgning i pgvector stadig hurtig
 (retrieval-evalen med 24 spørgsmål tager ca. 2 sekunder). HNSW bliver relevant ved
 titusinder af chunks.
 
@@ -227,7 +319,7 @@ fingeraftryk af skemaversion, chunks og embedding-model gemmes i databasen, og
 - **Korpusset er et øjebliksbillede.** Priser og regler ændrer sig. I drift skal det hentes
   igen jævnligt, og evals skal køres igen, når det sker.
 - **Et lille eval-sæt.** 32 cases er nok til at vise metoden og fange store forværringer,
-  ikke til at garantere kvaliteten over 1.774 sider. Forskelle på 1-2 cases er støj.
+  ikke til at garantere kvaliteten over 1.459 sider. Forskelle på 1-2 cases er støj.
 - **LLM-dommeren er selv en model.** Den kan tage fejl, og dens begrundelser bør stikprøves.
 - **Personoplysninger.** Spørgsmål kan indeholde personoplysninger og sendes til en ekstern
   model. API'et logger ikke spørgsmålet, men i drift skal valg af udbyder, region og

@@ -93,3 +93,61 @@ derefter identiske tal. Uden rettelsen ville CI kunne fejle tilfældigt.
 **Opstartstid.** Ingest tager nu ca. 2,5 min. Containeren kører `ingest --if-changed`,
 der sammenligner et fingeraftryk (skemaversion, chunks, embedding-model) med det
 gemte og springer over, hvis intet er ændret: 158 s -> 1,4 s.
+
+## 2026-11-20 - Svar-evalen afslørede en blind vinkel i retrieval-evalen
+
+Første svar-eval på det store korpus (Haiku 5.5) gav correct 0,71 (før 0,95), selvom
+retrieval-evalen viste hit@5 = 1,000. Gennemgang af de fejlede cases: i 6 af 10 var
+det afsnit, der bar svaret, ikke i konteksten. Det rigtige *dokument* var fundet,
+men ikke den rigtige *chunk*. Eksempler: Haiku svarede "Ja" til vielse den 28.
+november (afsnittet "Lukkedage" manglede) og brugte børneprisen 150 kr. som
+normalpris for et pas (voksenprisen manglede, fordi højst 2 chunks pr. dokument
+var tilladt). På det lille korpus kom alle chunks fra de få sider med, så problemet
+var usynligt.
+
+**Ny metrik: evidence@context.** Hver case har nu et `evidence`-felt med ordrette
+tekststykker, der beviser svaret (valideret mod de forventede dokumenter ved
+indlæsning). Metrikken måler, om de står i den kontekst, modellen får.
+
+**Small-to-big retrieval.** Søg på chunks, men giv modellen hele siderne for de
+bedste dokumenter (siderne er 0,4-4 kB). Samtidig blev 315 tidsbundne/interne sider
+udeladt (referater fra råd, trafik-nyhedsbreve, teknisk parkhåndbog): deres mange
+datoer matchede spørgsmålet om vielse den 28. november.
+
+| Variant (1.459 sider, 5.832 chunks) | evidence@context | hit@3 | MRR | kontekst |
+|---|---:|---:|---:|---:|
+| Top-5 chunks, vektor | 0.792 | 0.833 | 0.833 | 1.896 tegn |
+| Top-5 chunks, hybrid, højst 2 pr. dokument | 0.792 | 1.000 | 0.931 | 2.526 tegn |
+| Top-5 chunks, hybrid, ingen grænse | 0.833 | 1.000 | 0.931 | 2.383 tegn |
+| Hele sider, 2 dokumenter | 0.958 | 0.958 | 0.917 | 2.604 tegn |
+| **Hele sider, 3 dokumenter (valgt)** | **1.000** | **1.000** | **0.931** | **3.640 tegn** |
+| Hele sider, 5 dokumenter | 1.000 | 1.000 | 0.931 | 5.990 tegn |
+
+Grænsen på 2 chunks pr. dokument (beholdt tidligere "som værn" uden målt effekt)
+skadede målbart og er fjernet. Lære: behold ikke en mekanisme, hvis effekt ikke er målt.
+
+**Andre fund undervejs:**
+- En case crashede (`UnexpectedModelBehavior`/netværksfejl) og forsvandt fra
+  nævneren, så tallene så *bedre* ud. Rettet: crashede cases tæller som fejl, og
+  netværksfejl prøves igen. Pipelinen returnerer nu "ved ikke" i stedet for at
+  crashe, når modellen ikke kan levere gyldige kilder, og API'et giver 503 ved
+  midlertidige modelfejl.
+- Overforsigtighed: Haiku markerede korrekte svar som "unknown" (svaret stod i
+  begrundelsen). Prompten fik en generel regel: brug "answer", når kilderne helt
+  eller delvist besvarer spørgsmålet, også når svaret følger af en regel.
+
+**Svar-eval, Haiku 5.5, efter alle ændringer** (32 cases, dommer Sonnet 5.5):
+
+| | Lille korpus (25 sider) | Stort korpus, før | **Stort korpus, efter** |
+|---|---:|---:|---:|
+| decision_accuracy | 0.968 | 0.839 | **0.938** |
+| abstains_when_out_of_scope | 1.000 | 1.000 | **1.000** |
+| correct | 0.950 | 0.714 | **1.000** |
+| grounded | 1.000 | 0.968 | **1.000** |
+| resisted_injection | 1.000 | 1.000 | **1.000** |
+| input-tokens pr. spørgsmål | ~2.970 | 3.400 | 5.475 |
+| pris pr. 1.000 spørgsmål | $0,40 | $0,50 | $0,70 |
+
+De 2 resterende fejl er overforsigtighed: svaret er korrekt, men markeret "unknown".
+I den ene opfinder Haiku et forbehold ("afhænger af delstat"), der ikke står i kilden.
+Opus 5.5 er ikke målt igen på det store korpus (budget); dens tal er fra 25-siders korpusset.
