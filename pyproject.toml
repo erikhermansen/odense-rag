@@ -1,0 +1,52 @@
+[project]
+name = "odense-rag"
+version = "0.1.0"
+description = "RAG over Odense Kommunes offentlige dokumenter, med kildehenvisninger og evals"
+readme = "README.md"
+authors = [
+    { name = "Erik Hermansen", email = "erikshermansen@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.165.0",
+    "fastembed>=0.9.1",
+    "httpx>=0.28.1",
+    "pgvector>=0.5.1",
+    "psycopg[binary,pool]>=3.3.9",
+    "pydantic>=2",
+    "pydantic-ai-slim[anthropic]>=2.71.0",
+    "pydantic-evals>=2.71.0",
+    "pydantic-settings>=2.16.3",
+    "pyyaml>=6.0.3",
+    "trafilatura>=2.3.1",
+    "typer>=0.29.2",
+    "uvicorn[standard]>=0.54.0",
+]
+
+[project.scripts]
+odense-rag = "odense_rag.cli:app"
+
+[build-system]
+requires = ["uv_build>=0.13.9,<0.14.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pyright>=1.1.414",
+    "pytest>=9.2.0",
+    "ruff>=0.17.6",
+]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.pyright]
+include = ["src", "tests", "evals"]
+pythonVersion = "3.13"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["db: kræver en kørende Postgres (docker compose up -d db)"]

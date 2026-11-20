@@ -1,0 +1,19 @@
+services:
+  db:
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_USER: odense
+      POSTGRES_PASSWORD: odense
+      POSTGRES_DB: odense_rag
+    ports:
+      - "5433:5432"   # 5433 for ikke at kollidere med en lokal Postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odense -d odense_rag"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  pgdata:
