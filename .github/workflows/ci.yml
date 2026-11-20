@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      db:
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_USER: odense
+          POSTGRES_PASSWORD: odense
+          POSTGRES_DB: odense_rag
+        ports: ["5433:5432"]
+        options: >-
+          --health-cmd "pg_isready -U odense -d odense_rag"
+          --health-interval 2s --health-timeout 3s --health-retries 20
+    env:
+      DATABASE_URL: postgresql://odense:odense@localhost:5433/odense_rag
+      PYDANTIC_AI_NO_BANNER: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - name: Installér afhængigheder
+        run: uv sync --locked
+      - name: Lint og format
+        run: |
+          uv run ruff check .
+          uv run ruff format --check .
+      - name: Typecheck
+        run: uv run pyright
+      - name: Unit tests
+        run: uv run pytest -q
+      - name: Cache embedding-model
+        uses: actions/cache@v4
+        with:
+          path: .fastembed_cache
+          key: fastembed-${{ hashFiles('src/odense_rag/config.py') }}
+      - name: Byg indeks
+        run: uv run odense-rag ingest
+      - name: Retrieval-eval (fejler ved forværring mod baseline)
+        run: uv run python -m evals.retrieval_eval

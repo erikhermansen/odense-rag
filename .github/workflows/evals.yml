@@ -1,0 +1,64 @@
+name: Svar-eval
+
+# Kører hele RAG-flowet mod en rigtig LLM. Koster ca. $0,50-1 pr. kørsel
+# (mest LLM-dommeren), så den kører ikke ved hver push.
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      model:
+        description: Svarmodel
+        default: anthropic:claude-haiku-5-5
+        type: choice
+        options:
+          - anthropic:claude-haiku-5-5
+          - anthropic:claude-sonnet-5-5
+          - anthropic:claude-opus-5-5
+
+jobs:
+  answers:
+    runs-on: ubuntu-latest
+    services:
+      db:
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_USER: odense
+          POSTGRES_PASSWORD: odense
+          POSTGRES_DB: odense_rag
+        ports: ["5433:5432"]
+        options: >-
+          --health-cmd "pg_isready -U odense -d odense_rag"
+          --health-interval 2s --health-timeout 3s --health-retries 20
+    env:
+      DATABASE_URL: postgresql://odense:odense@localhost:5433/odense_rag
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      PYDANTIC_AI_NO_BANNER: "1"
+    steps:
+      - name: Spring over uden API-nøgle (fx PR'er fra forks)
+        if: env.ANTHROPIC_API_KEY == ''
+        run: echo "ANTHROPIC_API_KEY er ikke sat; springer svar-evalen over." >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/checkout@v4
+        if: env.ANTHROPIC_API_KEY != ''
+      - uses: astral-sh/setup-uv@v6
+        if: env.ANTHROPIC_API_KEY != ''
+        with:
+          enable-cache: true
+      - if: env.ANTHROPIC_API_KEY != ''
+        run: uv sync --locked
+      - uses: actions/cache@v4
+        if: env.ANTHROPIC_API_KEY != ''
+        with:
+          path: .fastembed_cache
+          key: fastembed-${{ hashFiles('src/odense_rag/config.py') }}
+      - if: env.ANTHROPIC_API_KEY != ''
+        run: uv run odense-rag ingest
+      - name: Svar-eval (fejler ved forværring ud over tolerancen)
+        if: env.ANTHROPIC_API_KEY != ''
+        run: uv run python -m evals.answer_eval --model "${{ inputs.model || 'anthropic:claude-haiku-5-5' }}"
+      - name: Gem detaljer pr. case
+        if: always() && env.ANTHROPIC_API_KEY != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-detaljer
+          path: evals/reports/
