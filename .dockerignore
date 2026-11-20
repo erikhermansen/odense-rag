@@ -1,0 +1,8 @@
+.venv
+.git
+.env
+.fastembed_cache
+.pytest_cache
+.ruff_cache
+evals/reports
+**/__pycache__
