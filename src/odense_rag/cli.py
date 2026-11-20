@@ -36,5 +36,26 @@ def fetch(
     typer.echo(f"{len(written)} dokumenter gemt i {out}/")
 
 
+@app.command()
+def ingest(docs: Path = Path("data/docs")) -> None:
+    """Chunk, embed og indlæs dokumenterne i Postgres (bygger indekset forfra)."""
+    from odense_rag.config import get_settings
+    from odense_rag.retrieval import ingest as run_ingest
+
+    settings = get_settings()
+    n = run_ingest(settings, docs)
+    typer.echo(f"{n} chunks indlæst med {settings.embed_model}")
+
+
+@app.command()
+def search(query: str, k: int = 5) -> None:
+    """Vis top-k chunks for en forespørgsel (uden LLM)."""
+    from odense_rag.config import get_settings
+    from odense_rag.retrieval import retrieve
+
+    for hit in retrieve(get_settings(), query, k):
+        typer.echo(f"{hit.score:.3f}  {hit.chunk.chunk_id:40}  {hit.chunk.section[:60]}")
+
+
 if __name__ == "__main__":
     app()
