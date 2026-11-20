@@ -1,34 +1,19 @@
-# Borgerrettede sider fra odense.dk, der indgår i korpusset.
+# Hvilke sider fra odense.dk der indgår i korpusset.
 # Hentes med `uv run odense-rag fetch` og gemmes som markdown i data/docs/.
-base_url: https://www.odense.dk/borger/
-pages:
-  # Pas
-  - borgerservice/pas-online-booking
-  - borgerservice/pas-online-booking/priser-og-gyldighed
-  - borgerservice/pas-online-booking/boernepas-ansoegning
-  - borgerservice/pas-online-booking/har-du-mistet-dit-pas
-  - borgerservice/pas-online-booking/midlertidigt-pas
-  - borgerservice/pas-online-booking/afhentning-af-pas
-  # Kørekort
-  - borgerservice/koerekort-online-booking/fornyelse-af-koerekort
-  - borgerservice/koerekort-online-booking/har-du-mistet-dit-koerekort
-  - borgerservice/koerekort-online-booking/internationalt-koerekort
-  - borgerservice/koerekort-online-booking/koerekorts-priser
-  - borgerservice/koerekort-online-booking/ombytning-af-udenlandske-koerekort
-  - borgerservice/koerekort-online-booking/digital-laegeattest
-  - borgerservice/koerekort-online-booking/billedregler
-  # Adresse, ID og digital post
-  - borgerservice/navn-og-adresse/skift-adresse
-  - borgerservice/navn-og-adresse/legitimationskort
-  - borgerservice/navn-og-adresse/faa-navne-og-adressebeskyttelse
-  - borgerservice/digital-post-til-dig-som-borger/kan-jeg-fritages-for-digital-post
-  - borgerservice/aabningstider
-  # Vielse
-  - borgerservice/vielse/borgerlig-vielse
-  - borgerservice/vielse/aegteskabserklaering
-  # Affald
-  - miljoe-og-affald/affald/affaldssortering
-  - miljoe-og-affald/affald/saerligt-affaldsudstyr
-  - miljoe-og-affald/affald/afbraending
-  - miljoe-og-affald/affald/koekkenkvaerne
-  - miljoe-og-affald/affald/bygge-og-anlaegsaffald
+#
+# Valg: hele den borgerrettede sektion (/borger/), men ikke:
+#   - konkrete afgørelser, dispensationer og høringer om enkeltsager. De er støj
+#     for generelle borgerspørgsmål.
+#   - /presse/ (nyheder bliver hurtigt forældede) og /politik/ (dagsordner og
+#     referater, ofte som PDF). De er udeladt ved at holde sig til /borger/.
+sitemap: https://www.odense.dk/sitemap.aspx
+include_prefix: https://www.odense.dk/borger/
+exclude_patterns:
+  - afgoerelse
+  - hoering
+  - dispensation
+  - tilladelse-til
+  - godkendelse
+  - vvm
+  - lokalplan
+  - forudgaaende

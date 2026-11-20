@@ -47,10 +47,23 @@ class Source(BaseModel):
     quote: str
 
 
+class RetrievedSource(BaseModel):
+    """Et af de tekststykker, retrieval fandt. Gør RAG-trinnet synligt i frontend og evals."""
+
+    chunk_id: str
+    title: str
+    section: str
+    url: str
+    text: str
+    score: float = Field(description="Cosinus-lighed med spørgsmålet (højere er mere relevant).")
+    cited: bool = Field(description="Om svaret citerer dette tekststykke.")
+
+
 class AskResponse(BaseModel):
     kind: Literal["answer", "unknown"]
     answer: str
     sources: list[Source]
+    retrieved: list[RetrievedSource]
     model: str
     latency_ms: int
     input_tokens: int

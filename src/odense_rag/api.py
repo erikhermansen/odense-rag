@@ -7,9 +7,11 @@ generere OpenAPI-dokumentation (se /docs), lidt ligesom tRPC + Zod.
 """
 
 import logging
+from pathlib import Path
 from typing import Annotated
 
 from fastapi import Depends, FastAPI, HTTPException
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from odense_rag import db
@@ -74,3 +76,10 @@ def health(settings: SettingsDep) -> Health:
     if indexed is None:
         raise HTTPException(status_code=503, detail="indeks mangler; kør `odense-rag ingest`")
     return Health(status="ok", embed_model=indexed)
+
+
+# Den byggede Vue-frontend (frontend/dist) serveres fra roden, hvis den findes.
+# Den monteres til sidst, så /ask, /health og /docs matches først.
+FRONTEND_DIST = Path(__file__).parents[2] / "frontend" / "dist"
+if FRONTEND_DIST.is_dir():
+    app.mount("/", StaticFiles(directory=FRONTEND_DIST, html=True), name="frontend")

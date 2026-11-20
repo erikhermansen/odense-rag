@@ -1,0 +1,8 @@
+/* Bevidst minimal: den visuelle stil er endnu ikke lavet. */
+body {
+  font-family: system-ui, sans-serif;
+  max-width: 48rem;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  line-height: 1.5;
+}

@@ -97,6 +97,21 @@ def test_svar_faar_kilder_slaaet_op_fra_databasen() -> None:
     assert source.section == PAS_CHUNK.chunk.section
 
 
+def test_hentede_chunks_returneres_med_score_og_citeret_markering() -> None:
+    response = ask(ScriptedModel(answer()))
+
+    [retrieved] = response.retrieved
+    assert retrieved.chunk_id == PAS_CHUNK.chunk.chunk_id
+    assert retrieved.score == PAS_CHUNK.score
+    assert retrieved.cited is True
+
+
+def test_hentede_chunks_er_ikke_citeret_ved_ved_ikke() -> None:
+    response = ask(ScriptedModel(unknown()))
+
+    assert [r.cited for r in response.retrieved] == [False]
+
+
 def test_ved_ikke_giver_ingen_kilder() -> None:
     response = ask(ScriptedModel(unknown()))
 

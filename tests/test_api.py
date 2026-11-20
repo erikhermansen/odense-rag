@@ -18,6 +18,7 @@ FAKE = AskResponse(
             quote="894 kr.",
         )
     ],
+    retrieved=[],
     model="test",
     latency_ms=1,
     input_tokens=10,

@@ -36,6 +36,10 @@ jobs:
         run: uv run pyright
       - name: Unit tests
         run: uv run pytest -q
+      - name: OpenAPI-skema er opdateret (kontrakt mellem backend og frontend)
+        run: |
+          uv run odense-rag openapi
+          git diff --exit-code frontend/openapi.json
       - name: Cache embedding-model
         uses: actions/cache@v4
         with:
@@ -45,3 +49,27 @@ jobs:
         run: uv run odense-rag ingest
       - name: Retrieval-eval (fejler ved forværring mod baseline)
         run: uv run python -m evals.retrieval_eval
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: frontend/package.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - name: TypeScript-typer er genereret fra det aktuelle OpenAPI-skema
+        run: |
+          pnpm gen:api
+          git diff --exit-code src/api/schema.d.ts
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build

@@ -1,3 +1,13 @@
+# Trin 1: byg Vue-frontenden.
+FROM node:22-slim AS frontend
+WORKDIR /frontend
+RUN corepack enable
+COPY frontend/package.json frontend/pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
+COPY frontend ./
+RUN pnpm build
+
+# Trin 2: Python-API'et, som også serverer den byggede frontend.
 FROM python:3.13-slim
 
 COPY --from=ghcr.io/astral-sh/uv:0.13.9 /uv /bin/uv
@@ -15,6 +25,7 @@ RUN uv sync --locked --no-install-project
 
 COPY --chown=app:app src ./src
 COPY --chown=app:app data ./data
+COPY --chown=app:app --from=frontend /frontend/dist ./frontend/dist
 RUN uv sync --locked
 
 # Hent embedding-modellen ved build, så containeren starter uden netværkskald til Hugging Face.

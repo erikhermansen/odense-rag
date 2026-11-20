@@ -32,11 +32,12 @@ def version() -> None:
 def fetch(
     sources: Path = Path("data/sources.yaml"),
     out: Path = Path("data/docs"),
+    refetch: bool = False,
 ) -> None:
-    """Hent siderne fra odense.dk og gem dem som markdown."""
+    """Hent siderne fra odense.dk og gem dem som markdown (springer hentede over)."""
     from odense_rag.ingest.fetch import fetch_all
 
-    written = fetch_all(sources, out)
+    written = fetch_all(sources, out, refetch=refetch)
     typer.echo(f"{len(written)} dokumenter gemt i {out}/")
 
 
@@ -76,6 +77,17 @@ def ask(question: str) -> None:
         f"\n({response.kind}, {response.model}, {response.latency_ms} ms, "
         f"{response.input_tokens} ind / {response.output_tokens} ud tokens)"
     )
+
+
+@app.command()
+def openapi(out: Path = Path("frontend/openapi.json")) -> None:
+    """Eksportér API'ets OpenAPI-skema (frontenden genererer sine TypeScript-typer fra det)."""
+    import json
+
+    from odense_rag.api import app as api_app
+
+    out.write_text(json.dumps(api_app.openapi(), indent=2, ensure_ascii=False) + "\n")
+    typer.echo(f"OpenAPI-skema skrevet til {out}")
 
 
 if __name__ == "__main__":

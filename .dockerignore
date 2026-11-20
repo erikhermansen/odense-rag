@@ -6,3 +6,5 @@
 .ruff_cache
 evals/reports
 **/__pycache__
+frontend/node_modules
+frontend/dist
