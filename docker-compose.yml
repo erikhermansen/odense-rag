@@ -31,6 +31,7 @@ services:
       interval: 5s
       timeout: 3s
       retries: 20
+      start_period: 300s   # første opstart bygger indekset (ca. 2-3 min.)
 
 volumes:
   pgdata:

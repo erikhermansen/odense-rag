@@ -1,0 +1,157 @@
+---
+title: 27. november 2025
+url: https://www.odense.dk/borger/aeldre-og-seniorer/seniorraad/referater/referater-2025/27-november-2025
+fetched: '2026-11-20'
+---
+
+# 27. november 2025
+
+## Tidspunkt og sted: Mødelokale 3. s. 54 (14.00-17.00)
+
+### Deltagere:
+
+Dagmar Andersen
+
+Dorthe Clemstrup Olsen
+
+Ejgil Aagaard Jørgensen
+
+Hans Ove Mertz
+
+Hans Nobel
+
+Ib Ketelsen
+
+Lars Thrysøe
+
+Lis Guldbæk Hansen
+
+Lise Witved (ordstyrer)
+
+Lisbeth Lykkegaard
+
+Nils Jørn Juul Stærmose
+
+Susanne Hansen
+
+Torben Bundgaard
+
+Afbud:
+
+Merete Helgens
+
+## DAGSORDEN
+
+### 1. Godkendelse af dagsorden
+
+Godkendt uden bemærkninger.
+
+### 2. Godkendelse af referat fra møde d. 30. oktober 2025
+
+Udsendt d. 19. november 2025.
+
+Referat godkendt uden bemærkninger.
+
+### 3. Orientering fra formanden og Ældre- og Handicapforvaltningen
+
+Formanden:
+
+Ældrerådets IPads skal afleveres i starten af det nye år på Ørbækvej 100. På kommende møde følger yderligere oplysninger for leveringen.
+
+Medlemmer, som ikke fortsætter i det nye ældreråd, skal huske at aflevere dørbrikker til Seniorhuset.
+
+Modtaget mail vedr. Hesbjerg Skov fra borger.
+
+Ældre- og Handicapforvaltningen:
+
+Der var ingen orientering.
+
+### 4. Videreformidling af væsentligt arbejde fra de enkelte arbejdsgrupper til det nye ældreråd
+
+De enkelte arbejdsgrupper orienterer på skift om de emner, de har udvalgt og hvilke opgaver, de ser heri for det nye ældreråd.
+
+Øvrige ældrerådsmedlemmer må gerne komme med spørgsmål eller kommentarer til arbejdsgruppen.
+
+Ældrerådet besluttede, at de enkelte arbejdsgruppers skriv sendes til alle ældrerådsmedlemmer til mulig kommentering. En eventuel kommentering sendes til den pågældende arbejdsgruppe senest fredag d. 5. december.
+
+Arbejdsgrupperne sender endeligt materiale til ældrerådsformanden, som, sammen med de 4 genvalgte ældrerådsmedlemmer, giver det som orientering til det nye ældreråd på deres introseminar d. 9.-10. december 2025.
+
+### 5. Status på ældrerådsarbejde i bestyrelser, udvalg, referencegrupper m.v.
+
+Opsamling på ældrerådsmedlemmers deltagelse i diverse arbejdsgrupper uden for Ældrerådet, (styregrupper bestyrelser, følgegrupper eller lignende).
+
+Bilag med oversigt over poster i bestyrelser, udvalg, referencegrupper mv. vedlagt dagsordenen.
+
+Eventuelle mangler tilføjes.
+
+De sidste poster vil blive tilrettet på oversigten.
+
+### 6. Det nære Sundhedsvæsen – Sundhedsreformen. Ældrelov
+
+### Intet nyt.
+
+### 7. Ældrerådsvalget og foreløbig evaluering heraf
+
+Er der noget Ældrerådet p.t. skal forholde sig til eller orienteres om?
+
+Foreløbig evaluering: Hvad har fungeret rigtig godt og forslag til forbedring.
+
+Ældrerådet gennemførte en foreløbig evaluering uden for referat.
+
+### 8. Orientering fra arbejdsgrupper og medlemmer af Ældrerådet
+
+Orientering fra arbejdsgrupperne og anden orientering:
+
+Sammenhængende Sundhed v/Lars Thrysøe og Lisbeth Lykkegaard: Der har ikke, som ellers aftalt, været afholdt møde vedr. Forebyggende hjemmebesøg i efteråret. Dette begrundet i manglende dagsorden tids nok til forberedelse.
+
+Trafikgruppen: Sag om de 2 mio. kr. til forbedring i centrum. Der var 3 prioriteringer, men kun 1 er gennemført. Undren over, at By- og Kulturforvaltningen så ikke er gået tilbage i udvalget, hvad de så ville med de resterende.
+
+By- og Kulturforvaltningen vil nedsætte en arbejdsgruppe vedr. prioritering af Fisketorvet. Gruppen har sagt ja til, at Ældrerådet gerne vil deltage. (Skal på listen herover, så denne opgave kommer med videre til nyt ældreråd).
+
+Ejgil Aagaard Jørgensen: Opfordrede til, at man læser seneste eksemplar af Odense Bogen med forskellige projekter for lokalområderne.
+
+Men mangler, at der beskrives noget om nabohjælp.
+
+Dagmar Andersen: Ældreidrættens Hus ændrer navn til Senioridræt Odense.
+
+### 9. Budgetopfølgning
+
+Regnskab pr. 1. november 2025 medsendt som bilag.
+
+Beløb er nu på plads, så der er penge til overførsel til næste år.
+
+### 10. Høringssvar og evt. læserbreve 3
+
+Godkendelse af beslutning om ikke at anvende private leverandører af praktisk bistand som underleverandører i helhedsplejen
+
+Godkendelse af forvaltningens forslag til uddeling af midler fra hhv. §§ 6 og 7
+
+Godkendelse af forvaltningens forslag til ændret tilgang og tilsyn
+
+Godkendelse af forvaltningens forslag til kriterier for indgåelse af driftsaftaler
+
+Godkendelse af forvaltningens forslag til opdaterede driftsaftaler
+
+Velfærdens Fundament – De ældste odenseanere – Opførelse af nyt plejehjem
+
+Velfærdens Fundament – De ældste odenseanere – Demensvenlige plejehjem 2026-2027
+
+### 11. Deltagelse i møder og konferencer
+
+Afholdte:
+
+Kaffemøde med rådmand Claus Houden d. 1. september 2025
+
+Deltagelse ved Nils Jørn Juul Stærmose, Lise Witved, Dorthe Clemstrup Olsen og Lars Thrysøe. På mødet blev bl.a. talt om plejehjem og dagcenterpladser, ældre- og handicapområdet i den kommende Sundheds- Omsorgs- og Sundhedsforvaltning.
+
+Positivt møde, hvor der blev lyttet, men der burde nok have været en dagsorden til mødet.
+
+Danske Ældreråd – Sundhedspolitisk konference d. 7. oktober 2025, Vejle:
+
+”Fra vision til virkelighed – veje til mere nærhed i sundhed”.
+
+### 12. Eventuelt
+
+Vedr. nye plejehjem: Har været på som lukket sag d. 26. november 2025.
+
+Hans Ove Mertz: Forslag til det nye ældreråd, at ældrerådet laver plan for introduktion af nyt medlem i rådet. Vigtigt, at der tages godt hånd om det nye medlem

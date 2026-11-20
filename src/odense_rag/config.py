@@ -5,6 +5,7 @@ konverteres ved opstart, så resten af koden kan stole på typerne.
 """
 
 from functools import lru_cache
+from typing import Literal
 
 from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -22,6 +23,13 @@ class Settings(BaseSettings):
     llm_effort: str = "low"
     embed_model: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
     top_k: int = 5
+    # Retrieval: "vector" (kun embeddings) eller "hybrid" (embeddings + dansk fuldtekst).
+    # Hybrid valgt ud fra retrieval-evalen på det fulde korpus (se evals/EXPERIMENTS.md).
+    retrieval_mode: Literal["vector", "hybrid"] = "hybrid"
+    # Ord, der står i mere end denne andel af alle chunks, udelades af fuldtekstsøgningen.
+    keyword_max_df: float = 0.05
+    # Højst så mange chunks fra samme dokument i top-k (0 = ingen grænse).
+    max_chunks_per_doc: int = 2
 
 
 # @lru_cache på en funktion uden argumenter er Pythons gængse "lazy singleton":

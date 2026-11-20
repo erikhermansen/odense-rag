@@ -1,0 +1,293 @@
+---
+title: 25. september 2025
+url: https://www.odense.dk/borger/aeldre-og-seniorer/seniorraad/referater/referater-2025/25-september-2025
+fetched: '2026-11-20'
+---
+
+# 25. september 2025
+
+## Tidspunkt og sted: Mødelokale 3. s. 54 (14.00-17.00)
+
+### Deltagere:
+
+Dagmar Andersen
+
+Dorthe Clemstrup Olsen
+
+Ejgil Aagaard Jørgensen
+
+Hans Ove Mertz
+
+Hans Nobel
+
+Ib Ketelsen
+
+Lars Thrysøe
+
+Lis Guldbæk Hansen
+
+Lisbeth Lykkegaard
+
+Merete Helgens (på teams)
+
+Nils Jørn Juul Stærmose (ordstyrer)
+
+Susanne Hansen
+
+Afbud:
+
+Lise Witved
+
+Torben Bundgaard
+
+### Gæster:
+
+Kl. 14.15-15.15: Lene Andersen, leder af Demensteamet; Ældre- og Handicapforvaltningen.
+
+Emnet er demens.
+
+Hvilke funktioner varetager Demensteamet?
+
+Hvilke opgaver ligger der hos den enkelte gruppe i Demensteamet?
+
+Hvordan samarbejder Demensteamet med andre afdelinger i Odense Kommune?
+
+Hvem samarbejder Demensteamet med udenfor kommunalt regi? Og hvordan?
+
+Lene Andersen gennemgik plancher, som medsendes referatet.
+
+Opsamling:
+
+Ældrerådet synes, det var et meget informativt oplæg. Der er mange steder, man kan henvende sig ved behov for hjælp i forbindelse med demens. Én indgang var måske mere overskueligt. Det vil være godt for det nye Ældreråd at se, hvad blandt andet Byhuset kan.
+
+## DAGSORDEN
+
+### 1. Godkendelse af dagsorden
+
+Dagsorden godkendt uden bemærkninger.
+
+### 2. Godkendelse af referat fra mødet d. 28. august 2025
+
+Udsendt d. 15. september 2025.
+
+Referat godkendt uden bemærkninger.
+
+### 3. Orientering fra formanden og Ældre- og Handicapforvaltningen
+
+Orientering ved næstformand Lisbeth Lykkegaard i formandens fravær: Der vil ikke blive udsendt referat af mødet i foråret med Sundhedsforvaltningen vedr. forebyggende hjemmebesøg. Men Sundhedsforvaltningen vil invitere til nyt møde herom i løbet af efteråret.
+
+Ældre- og Handicapforvaltningen: Kort orientering ved konsulent Johanne Laulund-Poulsen.
+
+### 4. Videreformidling af væsentligt arbejde fra de enkelte arbejdsgrupper til det nye Ældreråd.
+
+Forslag om, at der udarbejdes en skabelon for dette arbejde.
+
+Hvis skabelon, hvordan skal den så se ud?
+
+Er det tovholderne, som er ansvarlige for den enkelte arbejdsgruppes opsamling af væsentlige områder?
+
+Følgende model for arbejdsgruppe-arbejdet blev foreslået (skemaet suppleres blot med det antal rækker, gruppen har brug for):
+
+| Emne | Handlinger foretaget af arbejdsgruppen | Forsalg til opgaver for det nye Ældreråd |
+
+Modellen blev godkendt. Det betyder, at hver arbejdsgruppe i løbet af oktober eller november skal mødes og samle op på gruppens arbejde og formidle det af gruppens arbejde, som vurderes vigtigt at give videre til det nye Ældreråd via dette skema. Altså kun udfylde med de emner/områder, der vurderes vigtigt at videreformidle arbejdet af.
+
+Indstilling
+
+På ældrerådsmødet i slutningen af november fremlægger alle arbejdsgrupper ”deres skema” og FU samler efterfølgende alle arbejdsgruppers arbejde til det nye Ældreråd.
+
+### 5. Møde med rådmand Brian Dybro d. 8. september 2025.
+
+Formandskabet orienterer fra mødet og der gives plads til efterfølgende drøftelse og evt. beslutning om videre arbejde med nogle af punkterne.
+
+Lisbeth Lykkegaard:
+
+De nye plejehjem: Intet nyt, fortsat ikke på plads, hvor der kan bygges.
+
+Evt. nye idrætshaller: Ældrerådet påpegede, at der også skal være plads til de ældre. Også med forebyggende aktiviteter.
+
+Normeringer, ansættelser, vikarbureau: Vikarbureau-arbejdet kører efter planen. Regner med, at det er fuldt udrullet ved udgangen af 2026. Fremgang ift. ansættelse af Solstråler. Opkvalificering af ufaglærte har høj prioritet, disses gennemfører deres forløb og bliver på arbejdspladsen.
+
+I rapporten om Fremtidens Ældrepleje kigges der også på kombinerede administrative og plejerettede stillinger. Dette arbejde vil der også blive kigget på – hvor det giver mening.
+
+Faste selvstyrende teams: Rådmanden tilkendegav, at det ikke er noget, der arbejdes specifikt på og heller ikke noget, som de oplever, bliver efterspurgt
+
+Fortove/veje: Rådmanden henviste til, at det er By- og Kulturforvaltningen, der skal rettes henvendelse til.
+
+### 6. FN’s Internationale Ældredag
+
+De sidste praktiske ting omkring afholdelsen af mødets aftales (opstilling af borde/stole, hjælp ved servering af kaffe mm.).
+
+Arbejdsgruppen har holdt møde d. 23. september. Der kommer annonce i Ugeavisen.
+
+Det forventes, at ca. 200 vil deltage i arrangementet. Dørene åbnes kl. 13.00.
+
+Ældrerådet aftalte følgende:
+
+Mødetidspunkt kl. 12.00 for ældrerådsmedlemmer
+
+Borde ved indgange:
+
+Bord 1: Dagmar Andersen og Dorthe Clemstrup Olsen
+
+Bord 2: Lisbeth Lykkegaard og Susanne Hansen
+
+Det store kaffebord: Lis Guldbæk Hansen er koordinator.
+
+Stoleopsætning: Hans Ove Mertz, Hans Nobel + de øvrige ældrerådsmedlemmer, som møder ind.
+
+Der gives 2 vingaver i forbindelse med arrangementet.
+
+Der deltager 10 medlemmer fra Ældrerådet.
+
+### 7. Ældrepolitisk vælgermøde d. 7. november 2025
+
+Der orienteres fra arbejdsgruppen og herefter stillingtagen til, hvorvidt gruppen skal fortsætte eller om mødet skal droppes.
+
+Lisbeth Lykkegaard orienterede fra arbejdsgruppen, som havde holdt møde vedr. planlægning.
+
+Arbejdsgruppen var blevet bekendt med, at tilsvarende vælgermøde med samme fokus og målgruppe afholdes af Ældresagen.
+
+Beslutning:
+
+Ældrerådet besluttede at lægge valgmødet ned.
+
+Forslag: Det nye ældreråd opfordres til at tage et møde med nyvalgte politikere i starten af deres periode, og her have fokus på, hvad de vil gøre for ældreområdet.
+
+Forslaget videregives til det nye ældreråd.
+
+### 8. Regionsældrerådet foreslås nedlagt.
+
+Ekstraordinært årsmøde i Regionsældrerådet d. 1. oktober 2025.
+
+Dagsorden mv. er udsendt til hele Ældrerådet d. 10. september 2025.
+
+Ældrerådet godkendte, at formandskabet fik mandat til at kunne tilslutte sig nedlæggelse af Regionsældrerådet.
+
+### 10. Det nære Sundhedsvæsen – Sundhedsreformen. Ældrelov
+
+Ib Ketelsen: Inspiration: Tidligere er der sendt noget ud om straks-evaluering af den nye Ældrelov - startskud – Der er 1000 tilmeldte.
+
+Lars Thrysøe: Der har været holdt fælles møde for alle i Partnerskaber for ældreloven i praksis” d. 10.09.25. Tema for mødet: Samspil med både pårørende, lokale fællesskaber og civilsamfund. Referat samt bilag fra mødet medsendt.
+
+Desuden møde i ”Partnerskab ældrepleje i praksis for borgere og pårørende” (i samme regi) d. 29.10.25.
+
+### 11. Ældrerådsvalget
+
+Er der noget, Ældrerådet pt. skal forholde sig til eller orienteres om?
+
+Ældrerådet orienteres senere om det endelige antal opstillede kandidater.
+
+Der kommer på de store tavler i byen, at man kan stemme til Ældrerådsvalget. Der er også medarbejdere, der står udvalgte steder i løbet af valgperioden, så man kan afgive stemme digitalt med sundhedskort. Der er 4 dage til digital afstemning.
+
+### 12. Status på ”eksternt” ældrerådsarbejde
+
+Opsamling på ældrerådsmedlemmers deltagelse i diverse arbejdsgrupper uden for Ældrerådet, deltagelse i styregrupper, følgegrupper eller lignende.
+
+De enkelte deltagere i ovennævnte giver på Ældrerådsmødet en status på dette arbejde. Som bilag medsendt oversigt over opgaver og deltagere heri.
+
+Første halvdel af aktiviteterne blev der orienteret om på sidste ældrerådsmøde. Anden halvdel af aktiviteter orienteres der om på dette møde.
+
+Indstilling
+
+Punktet blev af tidsmæssige årsager udsat til næste møde i Ældrerådet.
+
+### 13. Orientering fra arbejdsgrupper og medlemmer af Ældrerådet
+
+Orientering fra arbejdsgrupperne:
+
+Boliggruppen
+
+Har haft møde om, hvad der skal arbejdes videre med: Plejehjem, sundhedshuse og seniorboliger. Der sker ikke noget pt. inden for plejehjem. Sundhedshuse vil gruppen arbejde videre med. Gruppen vil også henvende sig til ejendomsudvikler for at høre, om de har tanker om sundhedshuse eller andet tilsvarende.
+
+Frivillighedsgruppen
+
+Synliggørelse af fællesspisning på 3 plejehjem. Det er Ældre- og Handicapforvaltningen, der står for det praktiske med at modtage tilmelding.
+
+Det er projektmidler, der er sat af til det. Nævnes også i En venlig hilsen.
+
+Kommunikation
+
+Intet nyt.
+
+Pleje og omsorg
+
+Har været til møde med Byens Køkken. Har haft en snak om den ændring, der berører dem ved fusionen til den nye forvaltning. Vedr. formidling og synliggørelse blev køkkenet opfodret til at invitere det nye Ældreråds medlemmer til at prøve at få mad leveret af Byens Køkken, som inspiration til kommende dialog.
+
+Sammenhængende Sundhed
+
+Intet nyt.
+
+Trafik og tilgængelighed
+
+Der er kommet invitation til møde med FynBus d. 24. oktober 2025. Medlemmer tilmelder selv.
+
+Letbanen skal spørges, hvornår der kommer stropper.
+
+Velfærdsteknologi
+
+Har været til møde i Hjælpemiddelcentralen. Der er i oktober afprøvning af 3 modeller for medicindispensere.
+
+Pinup-skærme, som viser billeder/film – giver meget ro til demente.
+
+Hjælpemidler, som koster under 500 kr., skal man selv betale.
+
+Man kan få hjælp ved Ældresagen eller Dansk Røde Kors til at få sat greb op.
+
+Økonomi
+
+Introseminar for nyt Ældreråd skal indregnes i regnskab 2025.
+
+Anden orientering:
+
+Advisory Board
+
+Sammenfald med ældrerådsmøde d.d., hvorfor det ikke er muligt at deltage.
+
+En venlig hilsen
+
+Der er udkommet nyt nummer.
+
+Der er møde i uge 41.
+
+Referencegrupper
+
+Ved akutte hændelser på plejehjem: Tine er ved at lave artikel, som snart er færdig. Tine aftaler videre med styregruppen.
+
+Evt. anden orientering fra medlemmer
+
+Ejgil Aagaard Jørgensen: ser gerne, at medlemmer kommer med inspiration, hvis man har set nye initiativer. Så Ældrerådet har mulighed for at reflektere og se på andre løsninger.
+
+Ejgil blev opfordret til at sende uddybende til FU, så det kan tages op.
+
+Dagmar Andersen: Nøglebrikker skal afleveres personligt inden d. 19. december 2025 til Seniorhuset.
+
+### 14. Budgetopfølgning
+
+Regnskab pr. 1. september 2025 medsendt som bilag.
+
+Gennemgået.
+
+### 15. Høringssvar og evt. læserbreve
+
+### 16. Deltagelse i møder og konferencer
+
+Afholdte:
+
+Kaffemøde med rådmand Claus Houden d. 1. september 2025
+
+Udsættes til næste møde.
+
+Kommende:
+
+KL’s Ældre- og Sundhedskonference d. 1. oktober 2025 kl. 09.00-16.00:
+
+”Ældreplejen i forandring – ansvar, samarbejde og nye løsninger”, Comwell, Kolding.
+
+Danske Ældreråd – Sundhedspolitisk konference d. 7. oktober 2025 kl. 10.00-15.30:
+
+”Fra vision til virkelig – veje til mere nærhed i sundhed”, Best Western Torvehallerne, Vejle.
+
+### 17. Eventuelt
+
+IPads, som er stillet til rådighed for Ældrerådets medlemmer, hvordan med aflevering, når sidste møde har været afholdt? Forvaltningen er i gang med at undersøge.

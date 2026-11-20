@@ -16,16 +16,16 @@ from pydantic_evals.evaluators import Evaluator, EvaluatorContext
 
 from evals.cases import EvalCase, load_cases
 from evals.report import compare, load_baseline, publish, save_baseline
-from odense_rag.config import get_settings
+from odense_rag.config import Settings, get_settings
 from odense_rag.ingest.embed import get_embedder
 from odense_rag.retrieval import retrieve
 
 BASELINE_NAME = "retrieval"
 
 
-def ranked_doc_ids(question: str, k: int) -> list[str]:
+def ranked_doc_ids(settings: Settings, question: str, k: int) -> list[str]:
     """Dokument-id'er i rækkefølge efter bedste chunk, uden dubletter."""
-    hits = retrieve(get_settings(), question, k)
+    hits = retrieve(settings, question, k)
     # dict.fromkeys bevarer rækkefølgen og fjerner dubletter (som new Set i TS).
     return list(dict.fromkeys(h.chunk.doc_id for h in hits))
 
@@ -71,22 +71,42 @@ def build_dataset(k: int) -> Dataset[str, list[str], EvalCase]:
     )
 
 
-def main(update_baseline: bool = False, k: int | None = None) -> None:
-    settings = get_settings()
+def main(
+    update_baseline: bool = False,
+    k: int | None = None,
+    mode: str | None = None,
+    max_per_doc: int | None = None,
+    max_df: float | None = None,
+) -> None:
+    base = get_settings()
+    # Varianter kan måles fra kommandolinjen uden at ændre .env.
+    settings = base.model_copy(
+        update={
+            "retrieval_mode": mode or base.retrieval_mode,
+            "max_chunks_per_doc": base.max_chunks_per_doc if max_per_doc is None else max_per_doc,
+            "keyword_max_df": base.keyword_max_df if max_df is None else max_df,
+        }
+    )
     k = k or settings.top_k
     dataset = build_dataset(k)
     # Indlæs embedding-modellen én gang, før cases kører parallelt. Ellers
     # indlæser hver tråd sin egen kopi, før lru_cache har nået at gemme den.
     get_embedder(settings.embed_model)
 
-    report = dataset.evaluate_sync(lambda q: ranked_doc_ids(q, k), progress=False)
+    report = dataset.evaluate_sync(lambda q: ranked_doc_ids(settings, q, k), progress=False)
     report.print(include_input=False, include_output=True, include_durations=False)
 
     averages = report.averages()
     assert averages is not None
     metrics = {name: averages.scores[name] for name in averages.scores if name.startswith("hit@")}
     metrics["mrr"] = averages.scores["ReciprocalRank"]
-    config = {"embed_model": settings.embed_model, "top_k": str(k)}
+    config = {
+        "embed_model": settings.embed_model,
+        "top_k": str(k),
+        "retrieval_mode": settings.retrieval_mode,
+        "max_chunks_per_doc": str(settings.max_chunks_per_doc),
+        "keyword_max_df": str(settings.keyword_max_df),
+    }
 
     if update_baseline:
         path = save_baseline(BASELINE_NAME, metrics, config)
@@ -95,7 +115,12 @@ def main(update_baseline: bool = False, k: int | None = None) -> None:
 
     misses = [c.name for c in report.cases if not c.scores[f"hit@{k}"].value]
     table, regressions = compare(metrics, load_baseline(BASELINE_NAME))
-    body = f"Embedding-model: `{settings.embed_model}`, k={k}\n\n{table}"
+    body = (
+        f"Embedding-model: `{settings.embed_model}`, k={k}, "
+        f"tilstand: {settings.retrieval_mode}, max pr. dokument: {settings.max_chunks_per_doc}, "
+        f"max df: {settings.keyword_max_df}"
+        f"\n\n{table}"
+    )
     if misses:
         body += "\n\nIkke fundet i top-k: " + ", ".join(f"`{m}`" for m in misses)
     publish("Retrieval-eval", body)

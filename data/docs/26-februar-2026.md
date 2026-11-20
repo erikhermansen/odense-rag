@@ -1,0 +1,311 @@
+---
+title: 26 februar 2026
+url: https://www.odense.dk/borger/aeldre-og-seniorer/seniorraad/referater/referater-2026/26-februar-2026
+fetched: '2026-11-20'
+---
+
+# 26 februar 2026
+
+## Tidspunkt og sted: Mødelokale 3. s. 54 (14.00-17.00)
+
+### Deltagere:
+
+Angeline Banke (AB)
+
+Anita Ricka (AR)
+
+Erling Nielsen (EN)
+
+Gitte Brandt Nielsen (GBN)
+
+Halil Kandemir (HK)
+
+Hans Nobel (HN)
+
+Janne Høgshøj (JH)
+
+Kamilla Walsh (KW)
+
+Lars Thrysøe (LT)
+
+Lis Gulbæk Hansen (LGH)
+
+Lisbeth Lykkegaard (LL)
+
+Lone Østergaard Hansen (LØH)
+
+Pia Lindgreen (PL)
+
+Tor Sundberg (TS)
+
+Ulla Sigersted Jeppesen (USJ)
+
+Pia Baghbanian (referent)
+
+SOFF: Johanne Laulund-Poulsen
+
+Afbud:
+
+Lis Gulbæk Hansen
+
+Pia Lindgren
+
+Tor Sundberg
+
+Delvise afbud:
+
+Erling Nielsen gik kl. 16.23
+
+Angeline Banke deltog i tidsrummet kl. 14.00-15.00
+
+Valg af Ordstyrer: Gitte Brandt Nielsen
+
+## DAGSORDEN
+
+### 1. Godkendelse af dagsorden d. 26. februar 2026
+
+### Indstilling
+
+### Til godkendelse
+
+Referat:
+
+Til dagsorden Pkt. 4. tilføjes ekstra punkt vedrørende repræsentant til møde i Rosengården d. 3. marts 2026 samt et punkt 9.E vedrørende navneskift fra Ældreråd til Seniorråd. Dagsordenspunkter for beslutning blev behandlet først på mødet og dernæst de
+
+orienterende punkter; dette i relation til fremmøde og beslutningsdygtighed.
+
+Beslutning:
+
+Dagsorden godkendt
+
+### 2. Godkendelse af referat af d. 29. januar 2026
+
+Indstilling
+
+Til godkendelse
+
+Referat:
+
+Sekretærens opfølgningsliste medsendes jf. aftale som overblik for Ældrerådet.
+
+Beslutning:
+
+Referat godkendt
+
+### 3. Orientering fra formanden
+
+Indstilling
+
+For orientering
+
+Referat:
+
+Advisory Board er flyttet til Kommunikationsgruppen. I relation til gæster på Ældrerådsmøderne vil der komme en pause. Johanne oplyser at Louise Thule gerne vil deltage d. 26/3 på ordinært møde. Lone har modtaget henvendelse fra tidligere ældrerådsformand i relation til mailkonto.Det er aftalt, at den bliver lukket.
+
+Fremadrettet kommer der info om både formandens og næstformandens mail på hjemmesiden. Der er et ønske om telefontid og hertil en træffetid i Seniorhuset. Der er møde med Rådkvinden d. 24. marts – punkter til dagsorden modtages gerne og bør sendes cc til alle i Ældrerådet.
+
+Beslutning:
+
+Louise Thule deltager på Ældrerådsmøde d. 26/3. Øvrige punkter taget til efterretning.
+
+### 4. Orientering fra medlemmer af Ældrerådet
+
+### Herunder sidste nyt fra arbejdsgrupperne ved tovholder
+
+Indstilling
+
+For orientering
+
+Referat:
+
+Erling har deltaget i møde i Senioridræt Odense. Erling oplyser at der på Byrådsmøde d. 25/2 var stor ros til Ældrerådet fra flere
+
+partier. Janne og Hans informerer fra Kommunikationsgruppen; der mangler medlemmer. Arbejdet med hjemmesiden, der fremover
+
+bliver en del af menuen på Odense Kommunes hjemmeside, er godt på vej. Janne opfordrer til, at der nedsættes en Event gruppe. Hans oplyser, at Esbjergs hjemmeside er god: Esbjerg Ældreråd Lars informerer om Peier Mentor Ordning – opfordrer til, at de kommer på møde som gæster. Møde i Rosengården d. 3. marts – hvem skal deltage? Flere var interesserede, disse afgør selv deltagelsen efter mødet.
+
+Arbejdsgrupper: Ulla tilbyder at tage hånd om det videre arbejde her; tovholdere skal udpeges. Deltagelse i møder blev drøftet – SMS eller telefonopkald kan
+
+være en løsning.
+
+Beslutning:
+
+Taget til efterretning
+
+### 5. Orientering fra Forvaltningen
+
+Indstilling
+
+For orientering
+
+Referat:
+
+Orientering fra Forvaltningen givet v. Johanne Laulund-Poulsen, konsulent for Ældrerådet.
+
+Beslutning:
+
+Taget til efterretning
+
+### 6. Borgerhenvendelse
+
+Generel håndtering af borgerhenvendelser v. Lone
+
+Indstilling
+
+Til drøftelse og eventuel beslutning
+
+Referat:
+
+Lone pointerer, at borgerhenvendelser altid skal sendes til formandskabet. Lone vurderer om disse kan besvares straks eller bør videredistribueres for behandling.
+
+Beslutning:
+
+Taget til efterretning
+
+### 7. Budgetopfølgning
+
+Indstilling
+
+Til orientering og drøftelse
+
+Referat:
+
+Gitte oplyser, at det ser positivt ud. Der er et mindre forbrug. Fra Janne er der er et ønske om større overskuelighed og et dybere indblik i regnskabet; det er væsentligt, at midlerne bruges til gavn for de ældre. Det oplyses, at regnskabet sendes til hele Ældrerådet jf. ny beslutning.
+
+Beslutning:
+
+Taget til efterretning
+
+### 8. Høringssvar og evt. læserbreve
+
+### Procedure for høringssvar til endelig godkendelse v. Ulla – Bilag 1
+
+Indstilling
+
+Til drøftelse og endelig godkendelse
+
+Referat:
+
+Forslaget til procedure for udarbejdelse af høringssvar blev drøftet. Fordele og ulemper blev vendt. Forslaget blev sat til afstemning men nedstemt.
+
+Anden løsning blev drøftet.
+
+Beslutning:
+
+Forslag til ny procedure for udarbejdelse af høringssvar kan sendes til forretningsudvalget m. deadline d. 3. marts 2026.
+
+### 9. Deltagelse i møder og konferencer
+
+A: Dilemma - Hvem skal deltage i kurser m.m.? v. Lone
+
+Referat:
+
+Formandskabet modtager løbende forslag om kurser og ønsker om deltagelse. Formandskabet ønsker en drøftelse af, hvordan det fremover skal håndteres.
+
+Emnet blev drøftet. Det foreslås, at kurser/aktiviteter enten kommer på dagsorden som et fast punkt eller at Ældrerådet fremover sender ønsker til forretningsudvalget, der tager stilling ud fra et udarbejdet budget.
+
+B: Forventninger til dem som skal deltage i kurser, konferencer o. lign. v. Lone
+
+Referat:
+
+Lone oplyser, at der vil være en forventning om at der efter deltagelse i kurser el.lign.
+
+videndeles og videreformidles.
+
+C: Hvem skal deltage i konference ved Danske Ældreråd i Nyborg henholdsvis d.
+
+4. & d. 5. maj 2026? v. Lone
+
+Referat:
+
+Lone informerer om at forretningsudvalget vil deltage d. 4/5 og alle i Ældrerådet kan deltage d. 5/5. Man skal selv tilmelde. Lars beder om fremadrettet mere åben proces i relation til et sådant emne og dette
+
+tages til efterretning.
+
+D: Forslag til Temadag for alle, hvor vi arbejder med værdigrundlag, kultur i
+
+Ældrerådet, valg af mærkesager v. Tor
+
+Referat:
+
+Emnet blev drøftet i relation til indhold, budget, location og der var forslag om oprettelse af en event gruppe.Forslaget om temadag blev sendt til afstemning og enstemmigt vedtaget.
+
+E: Navneskift fra Ældrerådet til Seniorrådet.
+
+Referat:
+
+Forslaget blev sendt til afstemning.
+
+Resultat:
+
+For: 11
+
+Undlod at stemme: 1
+
+Imod: 0
+
+Johanne pointerede, at beslutningen om at skifte navn skal godkendes i Byrådet og derfor vil forvaltningen igangsætte en proces omkring den politiske behandling af et potentielt navneskifte. Formandskabet oplyste også at et eventuelt navneskift skal godkendes i Byrådet.
+
+Indstilling
+
+Til drøftelse og beslutning
+
+Beslutning:
+
+9.A: Punktet sættes på dagsorden for næste møde. Budget skal udarbejdes.
+
+9.B: Tages til efterretning
+
+9.C: Forretningsudvalget deltager d. 4/5 og alle kan tilmelde sig d. 5/5
+
+9.D: Forslaget blev enstemmigt vedtaget.
+
+9.E: Det blev v. flertal besluttet, at Ældrerådet indstiller til Byrådet, at rådet skifter navn til Seniorrådet.
+
+### 10. Opsamlingspunkter
+
+A: Motiveret dagsordensforslag – Bilag 2
+
+Referat:
+
+Forslaget ”Motiveret dagsordensforslag blev ikke tiltrådt. I stedet kan man indsende ønsker til punkter til formandskabet.
+
+B: Ekstra møder i foråret v. Lone
+
+Referat:
+
+Der var forslag om to ekstraordinære møder henholdsvis d. 12/3 og d. 12/5. Der var enighed om disse to møder/datoer.
+
+Indstilling
+
+Til drøftelse og beslutning
+
+Beslutning:
+
+Ønsker til dagsorden kan indsendes til formandskabet. Der indkaldes to
+
+ekstraordinære møder d. 12/3 og d. 12/5.
+
+### 11. Eventuelt
+
+Fremtidige emner og hvem skal kunne booke i Seniorhuset?
+
+Indstilling
+
+Til drøftelse
+
+Referat:
+
+Anita initierer en drøftelse om indeklimaet i mødelokalet. Anita ønsker en drøftelse af PC i stedet for IPad til Ældrerådet. Forvaltningen gjorde opmærksom på, Ældrerådet ikke kan beslutte, om de vil have en PC. Denne beslutning ligger i forvaltningen. Ældrerådet kan beslutte, om de ønsker at
+
+efterspørge en PC i stedet for en IPad. Punktet om IPad versus PC skal med på dagsorden for kommende møde. Booking af lokaler i Seniorhuset. Emnet blev drøftet.
+
+Beslutning:
+
+Det besluttes, at der fremover kan luftes ud/åbnes døre under møderne i Ældrerådet. Punkt vedrørende PC i stedet for IPad sættes på kommende dagsorden.
+
+Alle skal kunne booke i Seniorhuset.
+
+Mødet sluttede kl. 16.52
+
+Referent Pia Baghbanian

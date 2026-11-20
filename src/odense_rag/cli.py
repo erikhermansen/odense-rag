@@ -42,14 +42,17 @@ def fetch(
 
 
 @app.command()
-def ingest(docs: Path = Path("data/docs")) -> None:
+def ingest(docs: Path = Path("data/docs"), if_changed: bool = False) -> None:
     """Chunk, embed og indlæs dokumenterne i Postgres (bygger indekset forfra)."""
     from odense_rag.config import get_settings
     from odense_rag.retrieval import ingest as run_ingest
 
     settings = get_settings()
-    n = run_ingest(settings, docs)
-    typer.echo(f"{n} chunks indlæst med {settings.embed_model}")
+    n = run_ingest(settings, docs, if_changed=if_changed)
+    if n is None:
+        typer.echo("Indekset er allerede opdateret; intet at gøre.")
+    else:
+        typer.echo(f"{n} chunks indlæst med {settings.embed_model}")
 
 
 @app.command()

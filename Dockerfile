@@ -32,5 +32,6 @@ RUN uv sync --locked
 RUN uv run python -c "from odense_rag.config import get_settings; from odense_rag.ingest.embed import get_embedder; get_embedder(get_settings().embed_model)"
 
 EXPOSE 8000
-# Bygger indekset ved opstart (få sekunder for dette korpus) og starter API'et.
-CMD ["sh", "-c", "uv run odense-rag ingest && uv run uvicorn odense_rag.api:app --host 0.0.0.0 --port 8000"]
+# Bygger indekset ved første opstart (ca. 2-3 min.) og kun igen, hvis korpus,
+# chunking eller embedding-model er ændret. Derefter startes API'et.
+CMD ["sh", "-c", "uv run odense-rag ingest --if-changed && uv run uvicorn odense_rag.api:app --host 0.0.0.0 --port 8000"]
