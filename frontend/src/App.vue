@@ -1,10 +1,19 @@
 <!--
-  Funktionelt skelet: hele kæden virker, men der er ingen visuel stil.
-  Erstat det med dine egne komponenter. Logikken ligger i useAsk og kan genbruges uændret.
+  Siden samler komponenterne. Al tilstand og alle API-kald ligger i useAsk,
+  så komponenterne kun viser data og sender hændelser op.
 -->
 <script setup lang="ts">
-import { ref } from 'vue'
-import { MAX_LENGTH, useAsk } from './composables/useAsk'
+import { computed, ref } from 'vue'
+import AnswerSection from './components/AnswerSection.vue'
+import AppFooter from './components/AppFooter.vue'
+import AppHeader from './components/AppHeader.vue'
+import QuestionForm from './components/QuestionForm.vue'
+import RetrievalPanel from './components/RetrievalPanel.vue'
+import SearchingState from './components/SearchingState.vue'
+import SourceList from './components/SourceList.vue'
+import SuggestedQuestions from './components/SuggestedQuestions.vue'
+import { useAsk } from './composables/useAsk'
+import { groupSources } from './lib/answer'
 
 const EXAMPLES = [
   'Hvad koster et pas?',
@@ -16,6 +25,10 @@ const EXAMPLES = [
 const question = ref('')
 const { state, ask, isLoading } = useAsk()
 
+const sourcePages = computed(() =>
+  state.value.status === 'done' ? groupSources(state.value.response.sources) : [],
+)
+
 function submit(text = question.value) {
   question.value = text
   void ask(text)
@@ -23,59 +36,46 @@ function submit(text = question.value) {
 </script>
 
 <template>
-  <main>
-    <h1>Spørg om Odense Kommune</h1>
+  <div class="flex min-h-dvh flex-col">
+    <AppHeader />
 
-    <form @submit.prevent="submit()">
-      <label for="question">Dit spørgsmål</label>
-      <input
-        id="question"
-        v-model="question"
-        :maxlength="MAX_LENGTH"
-        autocomplete="off"
-        placeholder="Fx: Hvad koster et pas?"
-      />
-      <button type="submit" :disabled="isLoading">Spørg</button>
-    </form>
+    <main
+      class="mx-auto flex w-full max-w-[792px] flex-1 flex-col gap-7 px-4 pb-16 transition-[padding] duration-300"
+      :class="state.status === 'idle' ? 'pt-16 sm:pt-[164px]' : 'pt-8 sm:pt-[52px]'"
+    >
+      <div class="flex flex-col gap-3">
+        <p class="text-[11px] leading-[17px] font-semibold tracking-[1.7px] text-muted">
+          SPØRG DIN KOMMUNE
+        </p>
+        <h1 class="text-[32px] leading-10 font-medium tracking-[-1.4px] sm:text-[38px] sm:leading-[48px]">
+          Spørg om Odense Kommune
+        </h1>
+        <p class="text-base leading-6 text-muted">
+          Få et samlet svar med afsæt i kommunens egne oplysninger.
+        </p>
+      </div>
 
-    <ul aria-label="Eksempler på spørgsmål">
-      <li v-for="example in EXAMPLES" :key="example">
-        <button type="button" :disabled="isLoading" @click="submit(example)">{{ example }}</button>
-      </li>
-    </ul>
+      <QuestionForm v-model="question" :loading="isLoading" @submit="submit()" />
 
-    <!-- aria-live gør, at skærmlæsere læser svaret op, når det kommer. -->
-    <section aria-live="polite">
-      <p v-if="state.status === 'loading'">Finder svar …</p>
+      <!-- aria-live gør, at skærmlæsere læser nyt indhold op, når det kommer. -->
+      <div aria-live="polite" class="flex flex-col gap-6">
+        <SuggestedQuestions v-if="state.status === 'idle'" :questions="EXAMPLES" @pick="submit" />
 
-      <p v-else-if="state.status === 'error'" role="alert">{{ state.message }}</p>
+        <SearchingState v-else-if="state.status === 'loading'" />
 
-      <article v-else-if="state.status === 'done'">
-        <p v-if="state.response.kind === 'unknown'"><strong>Det kan jeg ikke svare på.</strong></p>
-        <p>{{ state.response.answer }}</p>
+        <section v-else-if="state.status === 'error'" class="flex flex-col gap-4 pt-1.5" role="alert">
+          <div class="h-px w-full bg-line" />
+          <p class="text-[15px] leading-[23px] font-medium">{{ state.message }}</p>
+        </section>
 
-        <ol v-if="state.response.sources.length">
-          <li v-for="source in state.response.sources" :key="source.chunk_id">
-            <a :href="source.url" target="_blank" rel="noopener">{{ source.section }}</a>
-            <blockquote>{{ source.quote }}</blockquote>
-          </li>
-        </ol>
+        <template v-else>
+          <AnswerSection :response="state.response" :page-count="sourcePages.length" />
+          <SourceList v-if="sourcePages.length" :key="state.question" :pages="sourcePages" />
+          <RetrievalPanel :key="state.question" :response="state.response" />
+        </template>
+      </div>
+    </main>
 
-        <details>
-          <summary>Sådan fandt jeg svaret</summary>
-          <ol>
-            <li v-for="chunk in state.response.retrieved" :key="chunk.chunk_id">
-              {{ chunk.score.toFixed(2) }} · {{ chunk.section }}
-              <span v-if="chunk.cited">(citeret)</span>
-            </li>
-          </ol>
-        </details>
-
-        <small>
-          {{ state.response.model }} · {{ (state.response.latency_ms / 1000).toFixed(1) }} s ·
-          {{ state.response.input_tokens + state.response.output_tokens }} tokens
-        </small>
-      </article>
-    </section>
-  </main>
+    <AppFooter />
+  </div>
 </template>

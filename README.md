@@ -98,8 +98,15 @@ Det er nyttigt for at forstå, hvorfor et svar blev, som det blev.
 - `src/composables/useAsk.ts`: tilstanden for et spørgsmål som en discriminated union
   (`idle`, `loading`, `done`, `error`). Et nyt spørgsmål annullerer et igangværende, så et
   sent svar ikke kan overskrive et nyere.
-- `src/App.vue`: brugerfladen, med svar, kilder og en udfoldelig sektion, der viser de
-  hentede tekststykker og deres score ("Sådan fandt jeg svaret").
+- `src/components/`: brugerfladen, bygget med Tailwind CSS ud fra et design i Figma:
+  spørgeformular, søge-tilstand, svar, kilder ("Læs mere om") og en udfoldelig sektion, der
+  viser de hentede sider, afsnit og deres score ("Sådan fandt jeg svaret").
+  Design-tokens (farver, font) ligger i `src/style.css`.
+- `src/lib/answer.ts`: rene funktioner, der former API-svaret til visning (fx grupperer
+  citater pr. side), testet uden at rendere komponenter.
+
+Vil du arbejde på frontenden uden at bruge API-kald, kan Vite-proxyen pege på en anden
+backend, fx en mock: `API_URL=http://localhost:8001 pnpm dev`.
 
 Efter en ændring i `src/odense_rag/models.py`:
 
@@ -341,7 +348,7 @@ fingeraftryk af skemaversion, chunks og embedding-model gemmes i databasen, og
 
 Projektet er bygget på en weekend med Claude Code som parprogrammør. Arkitekturvalg,
 eval-design og gennemgang af fejl er mine. Claude Code har skrevet en stor del af koden
-og forklaret Python-idiomer undervejs, fordi jeg kommer fra TypeScript. Kodekommentarerne
+og forklaret Python-idiomer undervejs, fordi jeg kommer fra TypeScript. Frontendens design har jeg lavet i Figma; Claude Code har implementeret det i Vue og Tailwind ud fra Figma-filen. Kodekommentarerne
 sammenligner flere steder med TypeScript-ækvivalenter af samme grund.
 
 Indholdet i `data/docs/` er hentet fra odense.dk og tilhører Odense Kommune.

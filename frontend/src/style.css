@@ -1,8 +1,24 @@
-/* Bevidst minimal: den visuelle stil er endnu ikke lavet. */
-body {
-  font-family: system-ui, sans-serif;
-  max-width: 48rem;
-  margin: 2rem auto;
-  padding: 0 1rem;
-  line-height: 1.5;
+@import 'tailwindcss';
+@import '@fontsource-variable/geist';
+
+/*
+  Design-tokens fra Figma-filen "Odense RAG". @theme gør dem til Tailwind-klasser,
+  fx bg-canvas, text-muted og border-line.
+*/
+@theme {
+  --font-sans: 'Geist Variable', system-ui, sans-serif;
+
+  --color-canvas: #f6f6f4;
+  --color-surface: #ffffff;
+  --color-ink: #20211f;
+  --color-muted: #5e605a;
+  --color-line: #d9dbd4;
+  --color-subtle: #ebede7;
+  --color-outline: #83867c;
+}
+
+@layer base {
+  body {
+    @apply bg-canvas font-sans text-ink antialiased;
+  }
 }
