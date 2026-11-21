@@ -20,6 +20,8 @@ import trafilatura
 import yaml
 from pydantic import BaseModel
 
+from odense_rag.ingest.pii import scrub_pii
+
 USER_AGENT = "odense-rag-demo/0.1 (offentligt demoprojekt; respekterer robots.txt)"
 MIN_BODY_CHARS = 100  # kortere sider er typisk rene navigationssider
 
@@ -91,9 +93,10 @@ def clean_body(body: str) -> str:
 
     Sidefoden (telefon og adresse på Borgernes Hus) er identisk på alle sider.
     Bliver den i korpusset, matcher den mange forespørgsler lige godt og
-    skubber de relevante chunks ned i resultatlisten.
+    skubber de relevante chunks ned i resultatlisten. Personoplysninger fjernes
+    også her (se pii.py), så de aldrig når disken eller indekset.
     """
-    body = FOOTER_RE.split(body, maxsplit=1)[0]
+    body = scrub_pii(FOOTER_RE.split(body, maxsplit=1)[0])
     # List comprehension: som .map() og .filter() i ét udtryk.
     lines = [" ".join(line.split()) if line.strip() else "" for line in body.splitlines()]
     text = "\n".join(lines)

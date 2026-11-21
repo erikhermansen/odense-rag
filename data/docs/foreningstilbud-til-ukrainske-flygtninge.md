@@ -236,7 +236,7 @@ Adresse: Klosterbakken 11, 5000 Odense C
 
 Telefon: +45 20 74 23 91
 
-Mail: mogander9@gmail.com
+Mail: [e-mail fjernet]
 
 Website: www.cafeklosterbakken.dk
 
@@ -484,7 +484,7 @@ Kontakt vores samarbejdspartner chefkonsulent Julie Fuglsang Fink på:
 
 E-mail: karjf@odense.dk
 
-Mobil: +45 51 16 50 18
+Mobil: [nummer fjernet]
 
 Nødhjælp:
 

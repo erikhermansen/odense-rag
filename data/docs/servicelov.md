@@ -158,7 +158,7 @@ Børstenbindervej 6
 
 Tlf.: 65 91 67 27
 
-Mail: info@mail.dk
+Mail: [e-mail fjernet]
 
 Kontaktperson Nanna Stausholm
 

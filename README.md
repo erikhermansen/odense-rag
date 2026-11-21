@@ -124,7 +124,7 @@ flowchart LR
 
 **Ingest** (`src/odense_rag/ingest/`): Alle sider under `/borger/` i odense.dk's sitemap
 hentes med `trafilatura` og gemmes som markdown i `data/docs/`. Afgørelser om enkeltsager,
-referater og nyhedsbreve udelades (se `data/sources.yaml`). Snapshot'et er committet, så evals er reproducerbare,
+referater og nyhedsbreve udelades (se `data/sources.yaml`). Private kontaktoplysninger (e-mails hos fx Gmail, mobilnumre og CPR-numre) fjernes, før siderne gemmes (`ingest/pii.py`), og en test sikrer, at det committede korpus er renset. Snapshot'et er committet, så evals er reproducerbare,
 selvom hjemmesiden ændrer sig. Siderne opdeles i 5.832 chunks efter overskrifter, embeddes
 lokalt og indlæses i Postgres.
 
@@ -326,6 +326,9 @@ fingeraftryk af skemaversion, chunks og embedding-model gemmes i databasen, og
   databehandleraftale afklares med jura og informationssikkerhed. Embeddings kører allerede
   lokalt, og Pydantic-AI gør det enkelt at skifte til en EU-hostet eller selvhostet
   open-weight-model. Det samme eval-sæt kan så vise, hvad skiftet koster i kvalitet.
+  Korpusset renses for private e-mails, mobilnumre og CPR-numre, men ikke for navne. Det
+  ville kræve navnegenkendelse (NER) og ramme mange offentlige navne. Reglerne er bevidst
+  konservative, så kommunens egne adresser og hovednumre bevares.
 
 ## Næste skridt
 

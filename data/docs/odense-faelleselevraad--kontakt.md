@@ -8,7 +8,7 @@ fetched: '2026-11-20'
 
 ## Odense Fælleselevråd:
 
-E-mail: odensefaelleselevraad@gmail.com
+E-mail: [e-mail fjernet]
 
 Instagram: #odensefaelleselevraad
 

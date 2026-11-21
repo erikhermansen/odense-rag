@@ -17,7 +17,7 @@ Hvis du er i tvivl om hvilken kirkegård, kan du læse mere om de 6 kommunale ki
 
 Kirkegårdsassistent Birgit Jensen.
 
-Mobil. 40 16 28 03
+Mobil. [nummer fjernet]
 
 Mail. kirkegaardsdrift@odense.dk
 
@@ -25,7 +25,7 @@ Landskabsarkitekt
 
 Casper Nicolai Khalik Pagh Vett
 
-Mobil. 40 16 28 01
+Mobil. [nummer fjernet]
 
 Mail. kirkegaardsdrift@odense.dk
 
