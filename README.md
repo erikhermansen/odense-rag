@@ -7,15 +7,21 @@ ikke", når kilderne ikke dækker spørgsmålet.
 Projektet handler mindst lige så meget om **at måle, om løsningen virker**, som om selve
 løsningen: 32 testspørgsmål, automatiske tjek og en AI-dommer, der vurderer svarene.
 
+![Brugerfladen med et svar, kilder og panelet "Sådan fandt jeg svaret"](docs/screenshot.png)
+
 ```
-$ uv run odense-rag ask "Hvad koster et nyt pas, hvis jeg har mistet mit gamle?"
+$ uv run odense-rag ask "Må jeg have vidner til min vielse?"
 
-Har du mistet dit pas, koster et nyt pas det dobbelte af normalprisen. [...]
-- Over 18 år (ikke folkepensionist): 894 kr., så et mistet pas koster 1.788 kr.
+Ja. Hvis I bliver viet en lørdag på rådhuset, skal I som udgangspunkt selv fremskaffe mindst
+et vidne, og Borgerservice skal have navn og adresse på vedkommende. Hvis vielsen foregår
+andre steder end på rådhuset, skal I selv medbringe to vidner [...]
 
-[1] Hvad koster et pas? > Husk du skal bestille tid
-    https://www.odense.dk/borger/borgerservice/pas-online-booking/priser-og-gyldighed
-    "Er dit pas mistet/bortkommet, stjålet eller ødelagt? Så er prisen det dobbelte af normalprisen for et nyt pas."
+[1] Borgerlig vielse > Borgerlige vielser på Odense Rådhus
+    https://www.odense.dk/borger/borgerservice/vielse/borgerlig-vielse
+    "Ønsker I at blive viet en lørdag på rådhuset, skal I som udgangspunkt selv fremskaffe mindst et vidne."
+[2] Borgerlig vielse > Borgerlige vielser på Odense Rådhus > Vidner til vielsen
+    https://www.odense.dk/borger/borgerservice/vielse/borgerlig-vielse
+    "I skal selv medbringe to vidner, når vielsen finder sted andre steder end på rådhuset."
 ```
 
 ## Om udviklingen
@@ -28,9 +34,8 @@ implementeret det.
 
 Projektet er udviklet i iterationer, og hver iteration er beskrevet kort nedenfor.
 
-## Teknologier
+## Tech stack
 
-- **Claude** er sprogmodellen, der formulerer svarene.
 - **Pydantic-AI** styrer kaldet til modellen og sikrer, at svaret altid kommer tilbage i
   et fast format: enten et svar med kilder eller "ved ikke".
 - **FastAPI og Pydantic** udgør API'et. Pydantic validerer data, ligesom Zod i TypeScript.
@@ -71,6 +76,10 @@ Face (kun tekstdelen, komprimeret). Alene er den bedre end den nuværende model 
 beviserne, men i kombination med ord-søgningen blev resultatet dårligere, og indekseringen
 tog 45 minutter i stedet for 2,5. Den nuværende model blev beholdt; EmbeddingGemma 2 kan
 vælges med `EMBED_MODEL`.
+
+**6. Haiku som standardmodel.** Alle svartal er målt med Claude Haiku, men systemet brugte
+Opus som standard. Nu er Haiku standard, ca. 46 gange billigere. Eksemplet øverst er
+udskiftet med et svar fra den nuværende version, og et skærmbillede viser brugerfladen.
 
 ## Sådan bruger du løsningen
 
@@ -227,7 +236,8 @@ De to fejl, der er tilbage, er overforsigtighed: Svaret er korrekt, men markeret
 
 **Modelvalg.** På første version var Claude Opus 100 % korrekt mod Haikus 95 %, men 46
 gange dyrere og langsommere. Til en borgerrettet løsning med mange spørgsmål ville jeg
-starte med Haiku. Modellen kan skiftes med én miljøvariabel (`LLM_MODEL`).
+starte med Haiku, og det er systemets standard. Modellen kan skiftes med én miljøvariabel
+(`LLM_MODEL`).
 
 ## Begrænsninger
 

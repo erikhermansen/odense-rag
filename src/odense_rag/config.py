@@ -17,7 +17,8 @@ class Settings(BaseSettings):
     # SecretStr skjuler værdien i repr() og logs; .get_secret_value() henter den.
     anthropic_api_key: SecretStr | None = None
     database_url: str = "postgresql://odense:odense@localhost:5433/odense_rag"
-    llm_model: str = "anthropic:claude-opus-5-5"
+    # Haiku: 100 % korrekte svar på eval-sættet og ca. 46 gange billigere end Opus (se README).
+    llm_model: str = "anthropic:claude-haiku-5-5"
     # Hvor meget modellen tænker, før den svarer: low | medium | high.
     # Spørgsmål-svar over korte kilder kræver sjældent dyb ræsonnering.
     llm_effort: str = "low"

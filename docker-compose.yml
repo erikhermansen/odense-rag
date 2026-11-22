@@ -23,7 +23,7 @@ services:
     environment:
       DATABASE_URL: postgresql://odense:odense@db:5432/odense_rag
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
-      LLM_MODEL: ${LLM_MODEL:-anthropic:claude-opus-5-5}
+      LLM_MODEL: ${LLM_MODEL:-anthropic:claude-haiku-5-5}
     ports:
       - "8000:8000"
     healthcheck:
