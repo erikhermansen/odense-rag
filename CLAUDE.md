@@ -4,6 +4,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 RAG over Odense Kommune's public citizen-service pages, with citations and evals. The README is in Danish, as are code comments, docstrings, test names and commit messages. Keep it that way. Comments often explain a Python idiom by comparing it to TypeScript, because the author comes from TS.
 
+**README "Iterationer":** every change the author asks for adds one short numbered entry there, naming the key concept or change. If results change, add a column for that iteration in the "Resultater" tables. Keep README prose light on detail and jargon: the author is not a Python developer and must be able to explain every term. Detailed numbers belong in `evals/EXPERIMENTS.md`.
+
 ## Commands
 
 ```bash
