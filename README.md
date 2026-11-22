@@ -63,9 +63,6 @@ fandt jeg svaret" viser, hvilke sider søgningen fandt, og hvilke afsnit der ble
 **4. Personoplysninger.** Private e-mails, mobilnumre og CPR-numre fjernes, før siderne
 gemmes. En test sikrer, at korpusset er renset (*dataminimering*).
 
-**5. Kortere README.** Afsnittene om afvejninger og næste skridt er erstattet af denne
-liste, og resultaterne er koblet til iterationerne.
-
 ## Sådan bruger du løsningen
 
 Kræver [uv](https://docs.astral.sh/uv/), Docker og en API-nøgle fra
