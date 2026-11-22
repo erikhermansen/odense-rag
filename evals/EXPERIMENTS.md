@@ -151,3 +151,31 @@ skadede målbart og er fjernet. Lære: behold ikke en mekanisme, hvis effekt ikk
 De 2 resterende fejl er overforsigtighed: svaret er korrekt, men markeret "unknown".
 I den ene opfinder Haiku et forbehold ("afhænger af delstat"), der ikke står i kilden.
 Opus 5.5 er ikke målt igen på det store korpus (budget); dens tal er fra 25-siders korpusset.
+
+## 2026-11-22 - EmbeddingGemma 2 som embedding-model
+
+Model: `onnx-community/embeddinggemma-2-ONNX` (revision daa72c5), kun tekstdelen,
+kvantiseret (`model_quantized.onnx`, ~300 MB). Præfikser fra modelkortet:
+`task: search result | query: ...` og `title: ... | text: ...`. fastembed understøtter
+ikke modellen (ONNX-grafen kræver tomme billed-, video- og lydinput), så den køres
+direkte med ONNX Runtime (`ingest/embed.py`).
+
+| | MiniLM-L12 (nuværende) | EmbeddingGemma 2 |
+|---|---:|---:|
+| vector: evidence@context | 0.792 | **0.875** |
+| vector: hit@1 | **0.792** | 0.750 |
+| vector: hit@3 | 0.833 | **0.917** |
+| vector: MRR | 0.812 | **0.826** |
+| hybrid: evidence@context | **1.000** | 0.958 |
+| hybrid: hit@1 | **0.875** | 0.750 |
+| hybrid: hit@3 | **1.000** | 0.958 |
+| hybrid: MRR | **0.931** | 0.847 |
+| ingest (5.832 chunks, CPU) | **~150 s** | 2.710 s |
+
+**Konklusion:** Gemma er bedre alene (især evidence og hit@3), men hybrid-pipelinen
+(df-tærskel 5 %, RRF, small-to-big med 3 dokumenter) er valgt med MiniLM, og samlet blev
+systemet dårligere. Mulig forklaring: de to rangeringer overlapper mere med Gemma, så
+fusionen tilfører mindre. Ikke undersøgt: ukvantiseret model, ny df-tærskel og vægtning
+i RRF med Gemma. Ingest er ca. 18 gange langsommere, hvilket også gør CI og
+containerstart langsommere. MiniLM beholdes som standard; Gemma kan vælges med
+`EMBED_MODEL=onnx-community/embeddinggemma-2-ONNX`.

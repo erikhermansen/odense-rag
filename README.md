@@ -35,6 +35,8 @@ Projektet er udviklet i iterationer, og hver iteration er beskrevet kort nedenfo
   et fast format: enten et svar med kilder eller "ved ikke".
 - **FastAPI og Pydantic** udgør API'et. Pydantic validerer data, ligesom Zod i TypeScript.
 - **Postgres med pgvector** er databasen. Den kan søge både på ord og på betydning.
+- **fastembed** beregner embeddings lokalt. Det holder installationen minimal og kører
+  hurtigt på almindelig CPU.
 - **pydantic-evals** kører testspørgsmålene og måler, hvor gode svarene er.
 - **Vue, TypeScript og Tailwind** udgør brugerfladen.
 
@@ -62,6 +64,13 @@ fandt jeg svaret" viser, hvilke sider søgningen fandt, og hvilke afsnit der ble
 
 **4. Personoplysninger.** Private e-mails, mobilnumre og CPR-numre fjernes, før siderne
 gemmes. En test sikrer, at korpusset er renset (*dataminimering*).
+
+**5. Ny embedding-model fra Hugging Face.** Efter anbefaling fra en kollega blev Googles
+EmbeddingGemma 2 afprøvet, i den ONNX-version, som `onnx-community` har lagt på Hugging
+Face (kun tekstdelen, komprimeret). Alene er den bedre end den nuværende model til at finde
+beviserne, men i kombination med ord-søgningen blev resultatet dårligere, og indekseringen
+tog 45 minutter i stedet for 2,5. Den nuværende model blev beholdt; EmbeddingGemma 2 kan
+vælges med `EMBED_MODEL`.
 
 ## Sådan bruger du løsningen
 
@@ -190,6 +199,19 @@ Kolonnerne svarer til iterationerne ovenfor. Detaljerne står i `evals/EXPERIMEN
 
 Metrikken evidence@context blev først indført i iteration 2. Med den kunne det måles, at
 kun 79 % af beviserne nåede frem til modellen før small-to-big.
+
+**Embedding-model** (iteration 5), samme 24 testspørgsmål:
+
+| | Nuværende model (MiniLM) | EmbeddingGemma 2 |
+|---|---:|---:|
+| Kun betydningssøgning: beviset med i konteksten | 79 % | **88 %** |
+| Kun betydningssøgning: rigtig kilde i top 3 | 83 % | **92 %** |
+| Hybrid søgning (det, systemet bruger): beviset med i konteksten | **100 %** | 96 % |
+| Hybrid søgning: rigtig kilde øverst | **88 %** | 75 % |
+| Indeksering af 5.832 tekststykker på CPU | **2,5 min.** | 45 min. |
+
+Den bedre model vinder alene, men systemets øvrige indstillinger er afstemt efter den gamle
+model. At få fuldt udbytte af den kræver, at kombinationen med ord-søgningen afstemmes igen.
 
 **Svar** med Claude Haiku som model og Claude Sonnet som dommer (32 testspørgsmål):
 
